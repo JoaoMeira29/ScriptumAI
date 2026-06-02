@@ -8,7 +8,7 @@ import {
   OnModuleDestroy,
 } from '@nestjs/common';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
-import { UpdateOrganizationDto, StatusType } from './dto/update-organization.dto';
+import { UpdateOrganizationDto } from './dto/update-organization.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { RabbitMQService } from '../rabbitmq/rabbitmq.service';
 import { CreateTrialOnboardingDto } from './dto/create-trial-onboarding.dto';
@@ -340,8 +340,8 @@ export class OrganizationsService implements OnModuleInit, OnModuleDestroy {
     });
 
     if (
-      updateOrganizationDto.status === StatusType.suspended &&
-      previous?.status !== StatusType.suspended
+      updateOrganizationDto.status === 'suspended' &&
+      previous?.status !== 'suspended'
     ) {
       await this.rabbitMQService.emit('org.suspended', {
         organizationId: updated.id,

@@ -1,4 +1,4 @@
-const errorHandler = (err, req, res, _next) => {
+const errorHandler = (err, req, res, next) => {
   console.error('Error:', err);
 
   // Validation errors

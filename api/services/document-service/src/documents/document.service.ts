@@ -114,7 +114,7 @@ export class DocumentService implements OnModuleInit {
 
       // 🆕 Publicar evento para AI Service processar
       try {
-        const downloadUrl = this.minioService.getPresignedUrl({
+        const downloadUrl = await this.minioService.getPresignedUrl({
           objectKey: insertedDocument.objectKey,
           expirySeconds: 3600, // 1 hora
         });
@@ -910,7 +910,7 @@ export class DocumentService implements OnModuleInit {
     };
 
     if (includeDownloadUrl) {
-      response.downloadUrl = this.minioService.getPresignedUrl({
+      response.downloadUrl = await this.minioService.getPresignedUrl({
         objectKey: doc.objectKey,
         public: true,
       });

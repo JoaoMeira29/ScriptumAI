@@ -16,7 +16,7 @@ const logger = require('../utils/logger');
  *   createdAt: '2025-01-01T00:00:00Z' (optional)
  * }
  */
-async function handleInviteCreated(payload, _message) {
+async function handleInviteCreated(payload, message) {
   try {
     // FIXED: Support multiple field name variations
     const inviteId = payload.id || payload.inviteId;
