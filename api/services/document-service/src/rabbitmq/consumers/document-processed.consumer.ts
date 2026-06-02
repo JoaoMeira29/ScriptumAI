@@ -28,11 +28,8 @@ export class DocumentProcessedConsumer implements OnModuleInit {
     @Inject(DRIZZLE) private readonly db: DrizzleDB,
   ) {}
 
-  async onModuleInit() {
-    // Aguardar conexão RabbitMQ estar pronta
-    setTimeout(() => {
-      this.startConsumer();
-    }, 2000);
+  onModuleInit() {
+    setTimeout(() => { void this.startConsumer(); }, 2000);
   }
 
   private async startConsumer() {
@@ -47,7 +44,7 @@ export class DocumentProcessedConsumer implements OnModuleInit {
     } catch (error) {
       this.logger.error('Failed to start consumer', error);
       // Retry após 5 segundos
-      setTimeout(() => this.startConsumer(), 5000);
+      setTimeout(() => { void this.startConsumer(); }, 5000);
     }
   }
 

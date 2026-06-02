@@ -90,7 +90,7 @@ export class MinioService implements OnModuleInit {
    * Get a presigned URL for downloading a file.
    * @param public - when true, replaces internal hostname with MINIO_PUBLIC_URL (for external clients like mobile apps)
    */
-  async getPresignedUrl(params: GetPresignedUrlParams & { public?: boolean }): Promise<string> {
+  getPresignedUrl(params: GetPresignedUrlParams & { public?: boolean }): string {
     const { objectKey, public: isPublic = false } = params;
 
     try {

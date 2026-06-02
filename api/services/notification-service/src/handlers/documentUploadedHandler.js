@@ -1,4 +1,3 @@
-const emailService = require('../services/emailService');
 const logger = require('../utils/logger');
 
 /**
@@ -12,7 +11,7 @@ const logger = require('../utils/logger');
  *   uploadedAt: '2025-01-01T00:00:00Z'
  * }
  */
-async function handleDocumentUploaded(payload, message) {
+async function handleDocumentUploaded(payload, _message) {
   try {
     logger.info('Processing document.uploaded event', { documentId: payload.id });
 
@@ -20,7 +19,6 @@ async function handleDocumentUploaded(payload, message) {
       id: documentId,
       fileName,
       userId,
-      organizationId
     } = payload;
 
     // This is a placeholder for future functionality

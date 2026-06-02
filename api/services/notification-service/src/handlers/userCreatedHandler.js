@@ -12,7 +12,7 @@ const logger = require('../utils/logger');
  *   createdAt: '2025-01-01T00:00:00Z' (optional)
  * }
  */
-async function handleUserCreated(payload, message) {
+async function handleUserCreated(payload, _message) {
   try {
     // FIXED: Support both 'id' and 'userId' in the payload
     const userId = payload.id || payload.userId;
