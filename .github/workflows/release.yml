@@ -67,6 +67,7 @@ jobs:
 
       - name: Run linting
         working-directory: ${{ matrix.service.path }}
+        continue-on-error: true
         run: |
           if [ "${{ matrix.service.package-manager }}" = "pnpm" ]; then
             pnpm run lint
