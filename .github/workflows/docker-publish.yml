@@ -19,24 +19,24 @@ jobs:
       matrix:
         service:
           - name: api-gateway
-            context: ./services/api-gateway
-            dockerfile: ./services/api-gateway/Dockerfile
+            context: ./api/services/api-gateway
+            dockerfile: ./api/services/api-gateway/Dockerfile
             image: api-gateway
           - name: auth-service
-            context: ./services/authentication-service
-            dockerfile: ./services/authentication-service/src/Dockerfile
+            context: ./api/services/authentication-service
+            dockerfile: ./api/services/authentication-service/src/Dockerfile
             image: auth-service
           - name: document-service
-            context: ./services/document-service
-            dockerfile: ./services/document-service/Dockerfile
+            context: ./api/services/document-service
+            dockerfile: ./api/services/document-service/Dockerfile
             image: document-service
           - name: notification-service
-            context: ./services/notification-service
-            dockerfile: ./services/notification-service/Dockerfile
+            context: ./api/services/notification-service
+            dockerfile: ./api/services/notification-service/Dockerfile
             image: notification-service
           - name: organization-service
-            context: ./services/organization-service
-            dockerfile: ./services/organization-service/Dockerfile
+            context: ./api/services/organization-service
+            dockerfile: ./api/services/organization-service/Dockerfile
             image: organization-service
 
     steps:

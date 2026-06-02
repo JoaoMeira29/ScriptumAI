@@ -21,22 +21,22 @@ jobs:
       matrix:
         service:
           - name: authentication-service
-            path: ./services/authentication-service
+            path: ./api/services/authentication-service
             node-version: "20"
             package-manager: npm
             has-typecheck: false
           - name: document-service
-            path: ./services/document-service
+            path: ./api/services/document-service
             node-version: "20"
             package-manager: pnpm
             has-typecheck: true
           - name: notification-service
-            path: ./services/notification-service
+            path: ./api/services/notification-service
             node-version: "20"
             package-manager: npm
             has-typecheck: false
           - name: organization-service
-            path: ./services/organization-service
+            path: ./api/services/organization-service
             node-version: "20"
             package-manager: npm
             has-typecheck: true
@@ -127,24 +127,24 @@ jobs:
       matrix:
         service:
           - name: api-gateway
-            context: ./services/api-gateway
-            dockerfile: ./services/api-gateway/Dockerfile
+            context: ./api/services/api-gateway
+            dockerfile: ./api/services/api-gateway/Dockerfile
             image: api-gateway
           - name: auth-service
-            context: ./services/authentication-service
-            dockerfile: ./services/authentication-service/Dockerfile
+            context: ./api/services/authentication-service
+            dockerfile: ./api/services/authentication-service/Dockerfile
             image: auth-service
           - name: document-service
-            context: ./services/document-service
-            dockerfile: ./services/document-service/Dockerfile
+            context: ./api/services/document-service
+            dockerfile: ./api/services/document-service/Dockerfile
             image: document-service
           - name: notification-service
-            context: ./services/notification-service
-            dockerfile: ./services/notification-service/Dockerfile
+            context: ./api/services/notification-service
+            dockerfile: ./api/services/notification-service/Dockerfile
             image: notification-service
           - name: organization-service
-            context: ./services/organization-service
-            dockerfile: ./services/organization-service/Dockerfile
+            context: ./api/services/organization-service
+            dockerfile: ./api/services/organization-service/Dockerfile
             image: organization-service
 
     steps:
@@ -182,9 +182,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-push
     if: |
-      always() && 
-      github.event_name == 'push' && 
-      github.ref == 'refs/heads/main' && 
+      always() &&
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
       needs.build-and-push.result == 'success'
     permissions:
       contents: read
@@ -216,44 +216,40 @@ jobs:
 
       - name: Apply Kubernetes manifests
         run: |
-          kubectl apply -f k8s/namespace.yaml
-          kubectl apply -f k8s/prometheus.yaml
-          kubectl apply -f k8s/kube-state-metrics.yaml
-          kubectl apply -f k8s/grafana.yaml
-          kubectl apply -f k8s/rabbitmq.yaml
-          kubectl apply -f k8s/auth-service.yaml
-          kubectl apply -f k8s/organization-service.yaml
-          kubectl apply -f k8s/document-service.yaml
-          kubectl apply -f k8s/notification-service.yaml
-          kubectl apply -f k8s/api-gateway.yaml
-          kubectl apply -f k8s/hpa.yaml
+          kubectl apply -f api/k8s/namespace.yaml
+          kubectl apply -f api/k8s/prometheus.yaml
+          kubectl apply -f api/k8s/kube-state-metrics.yaml
+          kubectl apply -f api/k8s/grafana.yaml
+          kubectl apply -f api/k8s/rabbitmq.yaml
+          kubectl apply -f api/k8s/auth-service.yaml
+          kubectl apply -f api/k8s/organization-service.yaml
+          kubectl apply -f api/k8s/document-service.yaml
+          kubectl apply -f api/k8s/notification-service.yaml
+          kubectl apply -f api/k8s/api-gateway.yaml
+          kubectl apply -f api/k8s/hpa.yaml
 
       - name: Force delete old replica sets (cleanup)
         run: |
-          # Delete old replica sets to free resources
           kubectl delete replicaset -n scriptumai -l app=auth-service --field-selector=status.replicas=0 || true
           kubectl delete replicaset -n scriptumai -l app=organization-service --field-selector=status.replicas=0 || true
           kubectl delete replicaset -n scriptumai -l app=document-service --field-selector=status.replicas=0 || true
           kubectl delete replicaset -n scriptumai -l app=notification-service --field-selector=status.replicas=0 || true
           kubectl delete replicaset -n scriptumai -l app=api-gateway --field-selector=status.replicas=0 || true
 
-      - name: Restart deployments with force
+      - name: Restart deployments
         run: |
-          # Remove rollingUpdate e aplica Recreate
           kubectl patch deployment auth-service -n scriptumai --type=json -p='[{"op":"remove","path":"/spec/strategy/rollingUpdate"},{"op":"replace","path":"/spec/strategy/type","value":"Recreate"}]'
           kubectl patch deployment organization-service -n scriptumai --type=json -p='[{"op":"remove","path":"/spec/strategy/rollingUpdate"},{"op":"replace","path":"/spec/strategy/type","value":"Recreate"}]'
           kubectl patch deployment document-service -n scriptumai --type=json -p='[{"op":"remove","path":"/spec/strategy/rollingUpdate"},{"op":"replace","path":"/spec/strategy/type","value":"Recreate"}]'
           kubectl patch deployment notification-service -n scriptumai --type=json -p='[{"op":"remove","path":"/spec/strategy/rollingUpdate"},{"op":"replace","path":"/spec/strategy/type","value":"Recreate"}]'
           kubectl patch deployment api-gateway -n scriptumai --type=json -p='[{"op":"remove","path":"/spec/strategy/rollingUpdate"},{"op":"replace","path":"/spec/strategy/type","value":"Recreate"}]'
-
-          # Restart deployments
           kubectl rollout restart deployment/auth-service -n scriptumai
           kubectl rollout restart deployment/organization-service -n scriptumai
           kubectl rollout restart deployment/document-service -n scriptumai
           kubectl rollout restart deployment/notification-service -n scriptumai
           kubectl rollout restart deployment/api-gateway -n scriptumai
 
-      - name: Wait for deployments (2 min timeout per service)
+      - name: Wait for deployments
         run: |
           kubectl rollout status deployment/auth-service -n scriptumai --timeout=2m || echo "⚠️  auth-service timeout"
           kubectl rollout status deployment/organization-service -n scriptumai --timeout=2m || echo "⚠️  organization-service timeout"
@@ -273,19 +269,6 @@ jobs:
       - name: Verify deployment
         if: always()
         run: |
-          echo "=== Deployment Status ==="
           kubectl get deployments -n scriptumai -o wide
-          echo ""
-          echo "=== Pod Status ==="
           kubectl get pods -n scriptumai -o wide
-          echo ""
-          echo "=== Pod Details (if any failed) ==="
-          kubectl get pods -n scriptumai --field-selector=status.phase!=Running --no-headers 2>/dev/null | while read pod rest; do
-            echo ">>> Describing pod: $pod"
-            kubectl describe pod $pod -n scriptumai | tail -30
-            echo ">>> Logs from pod: $pod"
-            kubectl logs $pod -n scriptumai --tail=50 2>/dev/null || echo "No logs available"
-            echo ""
-          done
-          echo "=== Recent Events ==="
           kubectl get events -n scriptumai --sort-by='.lastTimestamp' | tail -30

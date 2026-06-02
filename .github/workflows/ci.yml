@@ -22,22 +22,22 @@ jobs:
       matrix:
         service:
           - name: authentication-service
-            path: ./services/authentication-service
+            path: ./api/services/authentication-service
             node-version: "20"
             package-manager: npm
             has-typecheck: false
           - name: document-service
-            path: ./services/document-service
+            path: ./api/services/document-service
             node-version: "20"
             package-manager: pnpm
             has-typecheck: true
           - name: notification-service
-            path: ./services/notification-service
+            path: ./api/services/notification-service
             node-version: "20"
             package-manager: npm
             has-typecheck: false
           - name: organization-service
-            path: ./services/organization-service
+            path: ./api/services/organization-service
             node-version: "20"
             package-manager: npm
             has-typecheck: true
