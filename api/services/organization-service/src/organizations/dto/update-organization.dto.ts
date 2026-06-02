@@ -9,7 +9,7 @@ import {
   Min,
 } from 'class-validator';
 
-enum StatusType {
+export enum StatusType {
   active = 'active',
   inactive = 'inactive',
   pending = 'pending',

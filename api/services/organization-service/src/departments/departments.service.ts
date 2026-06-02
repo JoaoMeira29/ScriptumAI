@@ -12,7 +12,7 @@ import { UpdateDepartmentDto } from './dto/update-department.dto';
 export class DepartmentsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(organizationId: string) {
+  findAll(organizationId: string) {
     return this.prisma.department.findMany({
       where: { organizationId },
       include: { members: true },
@@ -72,7 +72,7 @@ export class DepartmentsService {
     return { message: 'Department deleted successfully' };
   }
 
-  async findDepartmentsByUser(organizationId: string, userId: string) {
+  findDepartmentsByUser(organizationId: string, userId: string) {
     return this.prisma.department.findMany({
       where: {
         organizationId,
