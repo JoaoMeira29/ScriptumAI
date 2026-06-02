@@ -1,39 +1,26 @@
-# ScriptumAI
+# ScriptumAI — API
 
-**Disciplina:** Projeto de Computação na Cloud + AIService  
-**Curso:** Mestrado em Engenharia Informática (MEI)  
-**Instituição:** IPCA - EST  
-**Ano Letivo:** 2025/2026
+Backend microservices for the ScriptumAI document management platform.
 
----
+## Architecture
 
-## Sobre o Projeto
+Six microservices behind an NGINX API Gateway on port 80, all running on a shared Docker network (`scriptumai-network`).
 
-**ScriptumAI** é uma plataforma de gestão documental com processamento inteligente por IA.
-O projeto segue uma arquitetura de microsserviços, com comunicação assíncrona via RabbitMQ,
-armazenamento de ficheiros em MinIO (S3-compatible) e um frontend web em Next.js.
-
----
-
-## Arquitetura de Microsserviços
-
-Seis microsserviços atrás de um API Gateway NGINX (porta 80), todos numa rede Docker `scriptumai-network`.
-
-| Serviço | Framework | ORM | Base de Dados | Porta |
-|---------|-----------|-----|---------------|-------|
-| pwa-service | Next.js 16 | — | — | 3000 |
+| Service | Framework | ORM | Database | Port |
+|---------|-----------|-----|----------|------|
+| api-gateway | NGINX | — | — | 80 |
 | authentication-service | Express.js | Sequelize | PostgreSQL (`auth_db`) | 3001 |
 | organization-service | NestJS | Prisma 6.x | PostgreSQL (`organization_db`) | 3002 |
 | document-service | NestJS + Fastify | Drizzle 0.44 | PostgreSQL (`document_db`) | 3003 |
 | ai-service | Python / FastAPI | — | ChromaDB | 8000 |
 | notification-service | Express.js | Prisma | PostgreSQL (`notification_db`) | 3005 |
 
-**Infraestrutura:** PostgreSQL 16, MinIO (S3-compatible), RabbitMQ 3.
+**Infrastructure:** PostgreSQL 16, MinIO (S3-compatible), RabbitMQ 3.
 
-### Routing (API Gateway)
+## API Routing
 
-| Rota | Serviço |
-|------|---------|
+| Route | Service |
+|-------|---------|
 | `/api/auth/*` | authentication-service |
 | `/api/organizations/*` | organization-service |
 | `/api/memberships/*` | organization-service |
@@ -42,12 +29,12 @@ Seis microsserviços atrás de um API Gateway NGINX (porta 80), todos numa rede 
 | `/api/notifications/*` | notification-service |
 | `/files/*` | MinIO (proxy) |
 
-### Comunicação entre Serviços
+## Service Communication
 
 **RabbitMQ** (exchange: `scriptumai.events`):
 
-| Routing Key | Produtor | Consumidor |
-|---|---|---|
+| Routing Key | Producer | Consumer |
+|-------------|----------|----------|
 | `document.uploaded` | document-service | ai-service |
 | `document.processed` | ai-service | document-service |
 | `document.ai.completed` | document-service | notification-service |
@@ -55,71 +42,69 @@ Seis microsserviços atrás de um API Gateway NGINX (porta 80), todos numa rede 
 | `user.created` | organization-service | notification-service |
 | `trial.expired` | organization-service | notification-service |
 
-**HTTP interno:** document-service → organization-service (subscrições e departamentos), document-service → ai-service (chat e embeddings)
-
----
+**Internal HTTP:** document-service → organization-service (subscriptions & departments), document-service → ai-service (chat & embeddings).
 
 ## AI Service
 
-Pipeline RAG (Retrieval-Augmented Generation) para processamento inteligente de documentos:
+RAG (Retrieval-Augmented Generation) pipeline for intelligent document processing:
 
-- **LangChain** para orquestração do pipeline
-- **ChromaDB** como vector store para embeddings
-- **sentence-transformers** (paraphrase-multilingual-MiniLM-L12-v2) para embeddings multilingue
-- **Ollama** (LLaMA 3.1) como LLM local para análise e sumarização
-- **Tesseract OCR** para PDFs digitalizados e imagens
+- **LangChain** for pipeline orchestration
+- **ChromaDB** as vector store for embeddings
+- **sentence-transformers** (`paraphrase-multilingual-MiniLM-L12-v2`) for multilingual embeddings
+- **Ollama** (LLaMA 3.1) as local LLM for analysis and summarization
+- **Tesseract OCR** for scanned PDFs and images
 
-**Formatos suportados:** PDF, DOCX, TXT, JPG, PNG
+**Supported formats:** PDF, DOCX, TXT, JPG, PNG
 
-**Funcionalidades:**
-- Extração de texto e OCR
-- Sumarização automática via LLM
-- Embeddings por organização (multi-tenant)
-- Chat por documento (RAG com contexto)
-- Chat global (RAG sobre múltiplos documentos com indicação de fontes)
-- Deteção automática de idioma (PT/EN)
-
----
+**Capabilities:**
+- Text extraction and OCR
+- Automatic summarization via LLM
+- Per-organization embeddings (multi-tenant)
+- Per-document chat (RAG with context)
+- Global chat (RAG across multiple documents with source attribution)
+- Automatic language detection (PT/EN)
 
 ## Quick Start
 
-### Pré-requisitos
+### Prerequisites
+
 - Docker & Docker Compose
-- Ollama com modelo `llama3.1` (para funcionalidades de IA)
+- Ollama with the `llama3.1` model (for AI features)
 
-### Iniciar ambiente local
+### Running locally
+
 ```bash
-# Clonar o repositório
-git clone https://github.com/IPCA-MEI-13Edicao/G3-API.git
-cd G3-API
+cd api
 
-# Iniciar todos os serviços
+# Copy and configure environment variables
+cp .env.example .env
+
+# Start all services
 docker compose up -d
 
-# Rebuild de serviços específicos após alterações
+# Rebuild specific services after changes
 docker compose up -d --build organization-service document-service
 
-# Ver logs de um serviço
+# View logs for a service
 docker compose logs <service-name> --tail 50
 ```
 
-### Serviços disponíveis
+### Available services
 
-| Serviço | Porta | URL |
-|---------|-------|-----|
-| PWA (Next.js) | 3000 | http://localhost:3000 |
+| Service | Port | URL |
+|---------|------|-----|
 | API Gateway (NGINX) | 80 | http://localhost |
-| AI Service | 8000 | http://localhost:8000 |
-| Document Service | 3003 | http://localhost:3003 |
-| Auth Service | 3001 | http://localhost:3001 |
+| Authentication Service | 3001 | http://localhost:3001 |
 | Organization Service | 3002 | http://localhost:3002 |
+| Document Service | 3003 | http://localhost:3003 |
 | Notification Service | 3005 | http://localhost:3005 |
+| AI Service | 8000 | http://localhost:8000 |
 | RabbitMQ Management | 15672 | http://localhost:15672 |
 | MinIO Console | 9001 | http://localhost:9001 |
 
-### Documentação da API (OpenAPI)
+### API Documentation (OpenAPI)
 
-| Serviço | URL |
+| Service | URL |
 |---------|-----|
 | document-service | http://localhost:3003/docs |
 | organization-service | http://localhost:3002/api/docs |
@@ -127,52 +112,23 @@ docker compose logs <service-name> --tail 50
 | notification-service | http://localhost:3005/api-docs |
 | ai-service | http://localhost:8000/docs |
 
----
+## Project Structure
 
-## Estrutura do Projeto
 ```
-G3-API/
+api/
 ├── services/
 │   ├── api-gateway/              # NGINX reverse proxy
-│   ├── pwa-service/              # Frontend web (Next.js 16)
 │   ├── authentication-service/   # Auth + JWT
-│   ├── organization-service/     # Orgs, membros, departamentos
-│   ├── document-service/         # Documentos + chat IA
+│   ├── organization-service/     # Orgs, members, departments
+│   ├── document-service/         # Documents + AI chat
 │   ├── ai-service/               # RAG pipeline (Python)
-│   └── notification-service/     # Emails + Push Notifications
-│
-├── infra/                        # Seed data, configs PostgreSQL
+│   └── notification-service/     # Emails + push notifications
+├── infra/                        # Seed data, PostgreSQL configs
 ├── k8s/                          # Kubernetes manifests
-├── docs/                         # Diagrama de arquitetura
-├── requisitos-avancados/         # Requisitos avançados (servidor, cliente, distribuição)
-│
+├── k6/                           # Load & stress tests
+├── terraform/                    # Infrastructure as code
+├── postman/                      # API collections
+├── advanced-requirements/        # Requirements documentation
 ├── .github/workflows/            # CI/CD (GitHub Actions)
-├── docker-compose.yaml
-└── README.md
+└── docker-compose.yaml
 ```
-
----
-
-## Diagrama de Arquitetura
-
-Disponível em [`docs/architecture-diagram.md`](docs/architecture-diagram.md) (Mermaid — renderiza automaticamente no GitHub).
-
----
-
-## Repositório Relacionado
-
-- [G3-PADM](https://github.com/IPCA-MEI-13Edicao/G3-PADM) — App móvel Android (Kotlin + Jetpack Compose)
-
----
-
-## Equipa
-
-- **Pedro Seara** (23079)
-- **João Meira** (23505)
-- **Leonardo Vieira** (34688)
-
----
-
-## Licença
-
-Projeto desenvolvido para fins académicos no âmbito do Mestrado em Engenharia Informática do IPCA - EST.

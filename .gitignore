@@ -1,0 +1,74 @@
+# ========================
+# Dependencies
+# ========================
+node_modules/
+.pnp
+.pnp.js
+
+# ========================
+# Environment variables
+# ========================
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+
+# ========================
+# Build outputs
+# ========================
+dist/
+build/
+out/
+.next/
+.nuxt/
+
+# ========================
+# Android / Mobile
+# ========================
+mobile/.idea/
+mobile/**/*.iml
+mobile/**/.gradle/
+mobile/**/build/
+mobile/**/local.properties
+mobile/**/*.apk
+mobile/**/*.aab
+mobile/**/*.keystore
+mobile/**/*.jks
+mobile/**/google-services.json
+
+# ========================
+# Logs
+# ========================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ========================
+# OS files
+# ========================
+.DS_Store
+Thumbs.db
+
+# ========================
+# IDE / Editor
+# ========================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# ========================
+# Testing & coverage
+# ========================
+coverage/
+.nyc_output/
+
+# ========================
+# Misc
+# ========================
+*.tsbuildinfo
+.eslintcache
