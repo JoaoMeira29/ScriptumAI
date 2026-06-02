@@ -910,7 +910,7 @@ export class DocumentService implements OnModuleInit {
     };
 
     if (includeDownloadUrl) {
-      response.downloadUrl = await this.minioService.getPresignedUrl({
+      response.downloadUrl = this.minioService.getPresignedUrl({
         objectKey: doc.objectKey,
         public: true,
       });
