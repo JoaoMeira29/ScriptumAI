@@ -1,0 +1,13 @@
+{
+  "name": "scriptumai-seed",
+  "version": "1.0.0",
+  "description": "Demo seed data for ScriptumAI databases",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "pg": "^8.11.3"
+  }
+}

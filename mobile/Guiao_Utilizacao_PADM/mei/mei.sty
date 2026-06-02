@@ -1,0 +1,192 @@
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{subcaption}
+% \usepackage{setspace}
+\usepackage{array}
+\usepackage{indentfirst}
+\usepackage[portuges]{babel}
+\usepackage[left=25mm,top=25mm,bottom=25mm,right=25mm]{geometry}
+\usepackage{ifthen}
+\usepackage{natbib}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{amssymb}
+% \usepackage{svg}
+
+
+
+\lstset{basicstyle=\small,
+        captionpos=b,
+        float=tp,
+        xleftmargin=1.5em,
+        xrightmargin=1.5em,
+        frameround=ttff,
+        frame=single,
+        floatplacement=tbp}
+\def\lstlistlistingname{Listagens de Código}
+\def\lstlistingname{Listagem}
+
+\usepackage{xcolor}
+\hypersetup{
+    colorlinks,
+    linkcolor={blue!20!black},
+    citecolor={blue!20!black},
+    urlcolor={blue!20!black}
+}
+
+% ---- aponto para a pasta 'mei'
+\bibliographystyle{mei/sp_por}
+\setlength{\parskip}{1ex}
+
+\makeatletter
+
+% ===== Curso =====
+\def\curso{~~}
+\def\LESI{\def\curso{Licenciatura em Engenharia em Sistemas Informáticos}}
+\def\MEI{\def\curso{Mestrado em Engenharia Informática}}
+
+% ===== Cadeira / Disciplina =====
+\def\cadeira{~~}
+\newcommand{\disciplina}[1]{\def\cadeira{#1}}
+
+% ===== Alunos (múltiplos) =====
+% listas internas (nomes e números)
+\def\students{}
+\def\nralunos{}
+
+% adiciona um aluno: \student{Nome}{Numero}
+\newcommand{\student}[2]{%
+  \ifx\students\empty
+    \def\students{#1}%
+    \def\nralunos{#2}%
+  \else
+    \edef\students{\students, #1}%
+    \edef\nralunos{\nralunos, #2}%
+  \fi
+}
+
+% ===== Empresa / Estágio =====
+\newcommand{\empresa}[1]{\def\@empresa{#1}}
+\def\enderecoEmpresa#1{\def\@eempresa{#1}}
+\newcommand{\supervisor}[1]{\def\@supervisor{#1}}
+
+% ===== Regime =====
+\def\regime{~~}
+\def\regimeDiurno{\renewcommand{\regime}{regime diurno}}
+\def\regimePosLaboral{\renewcommand{\regime}{regime pós-laboral}}
+
+% ===== Orientador =====
+\def\AND{~\\[2mm]}
+\def\orient{~~}
+\newcommand{\orientador}[1]{\def\orient{#1}}
+
+% ===== Rótulos singular/plural =====
+\def\alunoLabel{Identificação do aluno}
+\def\alunoNumeroLabel{Aluno número}
+\def\numeroPrefix{nrº}
+\newcommand{\alunosPlural}{%
+  \def\alunoLabel{Identificação dos alunos}%
+  \def\alunoNumeroLabel{Alunos número}%
+  \def\numeroPrefix{nrºs}%
+}
+
+% ===== Capa =====
+\renewcommand{\maketitle}{%
+    \thispagestyle{empty}
+    \includegraphics[height=2cm]{mei/logos/logo_ipca}
+    \hfill
+    \includegraphics[height=2cm]{mei/logos/logo_est}
+    \vfill
+    \vfill
+    \begin{center}
+        \IfFileExists{images/logo_scriptumai.png}{%
+            \includegraphics[height=3cm]{images/logo_scriptumai}\\[5mm]
+        }{}%
+        {\LARGE \@title}\\[7mm]
+        {\large \students}\\[1mm]
+        {\small (\numeroPrefix~\nralunos)}
+        \vfill
+%        Orientação de\\[2mm]
+        \orient\\[2mm]
+        {\textsc{\cadeira}} % <<< nome da cadeira
+        \vfill
+        \textsc{\curso}\\[2mm]
+        \textsc{Escola Superior de Tecnologia}\\[2mm]
+        \textsc{Instituto Politécnico do Cávado e do Ave}
+    \end{center}
+    \newpage
+    \backtitle
+    \newpage
+}
+
+% ===== Verso da capa =====
+\def\backtitle{
+\mbox{}
+\vfill
+\noindent {\large \textbf{\alunoLabel}}\\[2mm]
+\noindent \students \\ [3mm]
+\alunoNumeroLabel~\nralunos \\[3mm]
+\curso\\[8mm]
+%\noindent{\large \textbf{Orientação}}\\[2mm]
+\noindent \textbf{\cadeira} \\[3mm]
+\noindent \orient\\[5mm]
+\ifthenelse{\isundefined{\@empresa}}{}{
+  \noindent{\large \textbf{Informação sobre o Estágio}}\\[2mm]
+  \noindent \@empresa \newline
+  \@eempresa\newline
+  \@supervisor
+}
+}
+
+% ===== Ambientes =====
+\newenvironment{resumo}{
+\cleardoublepage\mbox{}
+\vfill
+\begin{center}
+    {\large\textbf{Resumo}}\\[7mm]
+    \begin{minipage}{.8\linewidth}
+    \setlength{\parskip}{2ex}
+}{
+    \end{minipage}
+    \end{center}
+    \vfill\newpage
+}
+
+\newenvironment{abstract}{
+\cleardoublepage\mbox{}
+\vfill
+\begin{center}
+    {\large\textbf{Abstract}}\\[7mm]
+\begin{minipage}{.8\linewidth}
+    \setlength{\parskip}{2ex}
+}{
+    \end{minipage}
+    \end{center}
+    \vfill\newpage
+}
+
+\newenvironment{agradecimentos}{
+\cleardoublepage\mbox{}
+\vfill
+\begin{center}
+    {\large\textbf{Agradecimentos}}\\[7mm]
+\begin{minipage}{.8\linewidth}
+    \setlength{\parskip}{2ex}
+}{
+    \end{minipage}
+    \end{center}
+    \vfill\newpage
+}
+
+\usepackage{titlesec}
+\titleformat{\chapter}{\bfseries\huge}{\thechapter.}{20pt}{\huge\bfseries}
+
+\usepackage[acronym]{glossaries}
+
+\makeatother

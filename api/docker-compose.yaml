@@ -1,0 +1,344 @@
+services:
+  api-gateway:
+    build:
+      context: ./services/api-gateway
+      dockerfile: Dockerfile
+    container_name: scriptumai-gateway
+    ports:
+      - "80:80"
+    depends_on:
+      - auth-service
+      - organization-service
+      - document-service
+      - notification-service
+      - pwa
+    networks:
+      - scriptumai-network
+    restart: unless-stopped
+
+  # ===================
+  # PWA (Next.js)
+  # ===================
+  pwa:
+    build:
+      context: ./services/pwa-service
+      dockerfile: Dockerfile
+    container_name: scriptumai-pwa
+    environment:
+      NODE_ENV: production
+      API_GATEWAY_URL: http://api-gateway
+    networks:
+      - scriptumai-network
+    restart: unless-stopped
+
+  # ===================
+  # MICROSERVICES
+  # ===================
+
+  # AI SERVICE - PYTHON
+  ai-service:
+    build:
+      context: ./services/ai-service
+      dockerfile: Dockerfile
+    container_name: scriptumai-ai-service
+    ports:
+      - "8000:8000"
+    environment:
+      MODEL_URL: http://host.docker.internal:11434
+      MODEL_NAME: llama3.1
+      MODEL_TIMEOUT_SECONDS: 120
+      EMBEDDING_MODEL: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+      DISABLE_EMBEDDINGS: false
+      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672
+    volumes:
+      - ai_uploads:/app/uploads
+      - ai_chroma:/app/chroma_db
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - scriptumai-network
+    restart: unless-stopped
+
+  # Authentication Service
+  auth-service:
+    build:
+      context: ./services/authentication-service
+      dockerfile: src/Dockerfile
+    container_name: scriptumai-auth-service
+    ports:
+      - "3001:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      SQL_SERVER: postgres
+      SQL_DATABASE: ${AUTH_DB_NAME}
+      SQL_USER: ${AUTH_DB_USER}
+      SQL_PASSWORD: ${AUTH_DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      ACCESS_TOKEN_EXPIRY: ${ACCESS_TOKEN_EXPIRY:-7d}
+      REFRESH_TOKEN_EXPIRY: ${REFRESH_TOKEN_EXPIRY:-30d}
+      HOST_URL: http://localhost:80
+      ORG_SERVICE_URL: http://organization-service:3000/api
+      DOC_SERVICE_URL: http://document-service:3000
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      NOTIFICATION_SERVICE_URL: http://notification-service:3000/api/notifications/send
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - scriptumai-network
+    restart: unless-stopped
+
+  # Organization Service
+  organization-service:
+    build:
+      context: ./services/organization-service
+      dockerfile: Dockerfile
+      target: production
+    container_name: scriptumai-organization-service
+    ports:
+      - "3002:3000"
+    environment:
+      DATABASE_URL: postgresql://${ORG_DB_USER}:${ORG_DB_PASSWORD}@postgres:5432/${ORG_DB_NAME}
+      JWT_SECRET: ${JWT_SECRET}
+      NODE_ENV: production
+      PORT: 3000
+      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672
+      RABBITMQ_EXCHANGE: scriptumai.events
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - scriptumai-network
+    restart: unless-stopped
+
+  # Document Service
+  document-service:
+    build:
+      context: ./services/document-service
+      dockerfile: Dockerfile
+    container_name: scriptumai-document-service
+    ports:
+      - "3003:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      JWT_SECRET: ${JWT_SECRET}
+      # Database
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${DOC_DB_USER}
+      DB_PASSWORD: ${DOC_DB_PASSWORD}
+      DB_NAME: ${DOC_DB_NAME}
+      # MinIO
+      MINIO_ENDPOINT: minio
+      MINIO_PORT: 9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      MINIO_BUCKET: documents
+      MINIO_USE_SSL: false
+      MINIO_PUBLIC_URL: ${MINIO_PUBLIC_URL:-http://localhost:9000}
+      ORG_SERVICE_URL: http://organization-service:3000/api
+      AI_SERVICE_URL: http://ai-service:8000
+      # RabbitMQ
+      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - scriptumai-network
+    restart: unless-stopped
+
+  # Notification Service
+  notification-service:
+    build:
+      context: ./services/notification-service
+      dockerfile: Dockerfile
+    container_name: scriptumai-notification-service
+    ports:
+      - "3005:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${NOTIF_DB_NAME}
+      DB_USER: ${NOTIF_DB_USER}
+      DB_PASSWORD: ${NOTIF_DB_PASSWORD}
+      DATABASE_URL: postgresql://${NOTIF_DB_USER}:${NOTIF_DB_PASSWORD}@postgres:5432/${NOTIF_DB_NAME}?schema=public
+      SECRET_TOKEN: ${JWT_SECRET}
+      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672
+      RABBITMQ_EXCHANGE: scriptumai.events
+      SMTP_HOST: ${SMTP_HOST:-mailpit}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL}
+      SMTP_FROM_NAME: ${SMTP_FROM_NAME}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      FIREBASE_SERVICE_ACCOUNT_PATH: /app/scriptumai-39607-firebase-adminsdk-fbsvc-645028dcb9.json
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    networks:
+      - scriptumai-network
+    restart: unless-stopped
+
+  # ===========================
+  # SHARED INFRASTRUCTURE
+  # ===========================
+
+  # PostgreSQL
+  postgres:
+    image: postgres:16-alpine
+    container_name: scriptumai-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infra/postgres/init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - scriptumai-network
+    restart: unless-stopped
+
+  # MinIO
+  minio:
+    image: minio/minio:latest
+    container_name: scriptumai-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    ports:
+      - "9000:9000" # API
+      - "9001:9001" # Console UI
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - scriptumai-network
+    restart: unless-stopped
+
+  # MinIO Init (Create Buckets)
+  minio-init:
+    image: minio/mc:latest
+    container_name: scriptumai-minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set myminio http://minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
+      mc mb myminio/documents --ignore-existing;
+      mc anonymous set download myminio/documents;
+      echo '✅ Bucket [documents] created successfully';
+      exit 0;
+      "
+    networks:
+      - scriptumai-network
+
+  # ─── Demo Seed ──────────────────────────────────────────────────────────────
+  # Insere dados demo (org, utilizadores, documentos) assim que as migrações
+  # dos serviços ficarem prontas. Corre uma única vez e termina.
+  db-seed:
+    build:
+      context: ./infra/seed
+      dockerfile: Dockerfile
+    container_name: scriptumai-db-seed
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      SEED_PASSWORD: ${SEED_PASSWORD:-Demo1234!}
+      SEED_MAX_RETRIES: 40
+      SEED_RETRY_DELAY_MS: 5000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+      organization-service:
+        condition: service_started
+      document-service:
+        condition: service_started
+    networks:
+      - scriptumai-network
+    restart: "no"
+
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: scriptumai-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672" # AMQP
+      - "15672:15672" # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - scriptumai-network
+    restart: unless-stopped
+
+  # Mailpit (Email testing UI — http://localhost:8025)
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: scriptumai-mailpit
+    ports:
+      - "8025:8025" # Web UI
+      - "1025:1025" # SMTP
+    networks:
+      - scriptumai-network
+    restart: unless-stopped
+
+
+volumes:
+  postgres_data:
+    name: scriptumai-postgres-data
+  minio_data:
+    name: scriptumai-minio-data
+  rabbitmq_data:
+    name: scriptumai-rabbitmq-data
+  ai_uploads:
+    name: scriptumai-ai-uploads
+  ai_chroma:
+    name: scriptumai-ai-chroma
+
+networks:
+  scriptumai-network:
+    name: scriptumai-network
+    driver: bridge

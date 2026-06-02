@@ -1,0 +1,20 @@
+gitignore
+# IDE Files - This is the most important part
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Build files
+.gradle/
+build/
+app/build/
+
+# Local configuration
+local.properties
+.DS_Store
+
+# Android Studio specific
+captures/
+.externalNativeBuild/
+.cxx/

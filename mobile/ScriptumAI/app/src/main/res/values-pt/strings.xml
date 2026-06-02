@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ScriptumAI</string>
+
+    <!-- ── Common ─────────────────────────────────────────────────── -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancelar</string>
+    <string name="save">Guardar</string>
+    <string name="retry">Tentar novamente</string>
+    <string name="back">Voltar</string>
+    <string name="delete">Eliminar</string>
+    <string name="edit">Editar</string>
+    <string name="error_something_went_wrong">Ocorreu um erro</string>
+    <string name="all_fields_required">Todos os campos são obrigatórios</string>
+    <string name="hide_password">Ocultar palavra-passe</string>
+    <string name="show_password">Mostrar palavra-passe</string>
+
+    <!-- ── Login ─────────────────────────────────────────────────── -->
+    <string name="login_title">Iniciar sessão</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Palavra-passe</string>
+    <string name="login_forgot_password">Esqueceu a palavra-passe?</string>
+    <string name="login_sign_up">Registar</string>
+    <string name="login_copyright">© %1$s. Todos os direitos reservados a ScriptumAI</string>
+    <string name="login_logo_description">Logótipo ScriptumAI</string>
+
+    <!-- ── Register ─────────────────────────────────────────────── -->
+    <string name="register_title">Criar organização</string>
+    <string name="register_subtitle">Escolha um plano primeiro e depois complete o registo.</string>
+    <string name="register_trial_note">O plano de Teste Gratuito dá acesso imediato por 15 dias. Os planos pagos mantêm o fluxo de subscrição padrão.</string>
+    <string name="register_popular">Popular</string>
+    <string name="register_org_details">Detalhes da organização</string>
+    <string name="register_fill_details">Preencha os seus dados para criar a conta.</string>
+    <string name="register_first_name">Primeiro nome</string>
+    <string name="register_last_name">Apelido</string>
+    <string name="register_username_optional">Nome de utilizador (opcional)</string>
+    <string name="register_username_hint">joao.silva</string>
+    <string name="register_org_name">Nome da organização</string>
+    <string name="register_city">Cidade</string>
+    <string name="register_address">Morada</string>
+    <string name="register_contact">Contacto</string>
+    <string name="register_zip_code">Código postal</string>
+    <string name="register_work_email">Email profissional</string>
+    <string name="register_confirm_password">Confirmar palavra-passe</string>
+    <string name="register_trial_accept">Confirmo que aceito os termos para iniciar o Teste Gratuito de 15 dias com acesso imediato.</string>
+    <string name="register_cta">Criar conta e iniciar teste</string>
+    <string name="register_paid_note">Nota: Os planos pagos ainda não estão disponíveis para ativação direta.</string>
+    <string name="register_already_have_account">Já tenho uma conta</string>
+
+    <!-- ── Forgot Password ───────────────────────────────────────── -->
+    <string name="forgot_password_title">Recuperar palavra-passe</string>
+    <string name="forgot_password_subtitle">Introduza o seu endereço de email e enviaremos um link para repor a sua palavra-passe.</string>
+    <string name="forgot_password_email_label">Endereço de email</string>
+    <string name="forgot_password_send_button">Enviar email de recuperação</string>
+    <string name="forgot_password_check_email_title">Verifique o seu email</string>
+    <string name="forgot_password_check_email_body">Enviámos um link de recuperação de palavra-passe para:</string>
+    <string name="forgot_password_instructions">Siga as instruções no email para repor a sua palavra-passe na web.</string>
+    <string name="forgot_password_back_to_login">Voltar ao início de sessão</string>
+
+    <!-- ── Pricing ───────────────────────────────────────────────── -->
+    <string name="pricing_title">Preços</string>
+    <string name="pricing_subtitle">Escolha o Teste Gratuito para 15 dias de demonstração, ou escolha um plano pago.</string>
+    <string name="pricing_back_to_login">Voltar ao início de sessão</string>
+    <string name="pricing_learn_more">Saber mais</string>
+    <string name="pricing_most_popular">Mais popular</string>
+
+    <!-- ── Home / Dashboard ──────────────────────────────────────── -->
+    <string name="home_dashboard">Painel</string>
+    <string name="home_documents">Documentos</string>
+    <string name="home_upload">Carregar</string>
+    <string name="home_menu">Menu</string>
+    <string name="home_notifications">Notificações</string>
+    <string name="home_settings">Definições</string>
+    <string name="home_theme">Tema</string>
+    <string name="home_theme_light">Claro</string>
+    <string name="home_theme_dark">Escuro</string>
+    <string name="home_theme_system">Sistema</string>
+    <string name="home_language">Idioma</string>
+    <string name="home_help">Ajuda</string>
+    <string name="home_logout">Terminar sessão</string>
+    <string name="home_welcome_back">Bem-vindo de volta, %1$s!</string>
+    <string name="home_overview">Aqui está uma visão geral da sua atividade de conteúdos.</string>
+    <string name="home_processed">Processados</string>
+    <string name="home_pending">Pendentes</string>
+    <string name="home_recent_documents">Documentos recentes</string>
+    <string name="home_no_documents">Sem documentos. Carregue o seu primeiro documento!</string>
+    <string name="home_edit_profile">Editar perfil</string>
+
+    <!-- ── Profile ───────────────────────────────────────────────── -->
+    <string name="profile_title">Perfil</string>
+    <string name="profile_username">Nome de utilizador</string>
+    <string name="profile_role">Função</string>
+    <string name="profile_status">Estado</string>
+    <string name="profile_plan">Plano</string>
+    <string name="profile_trial_remaining">Teste restante</string>
+    <string name="profile_trial_days">%1$d dias</string>
+    <string name="profile_messages_sent">Mensagens enviadas</string>
+    <string name="profile_member_since">Membro desde</string>
+    <string name="profile_edit_profile">Editar perfil</string>
+    <string name="profile_change_password">Alterar palavra-passe</string>
+
+    <!-- ── Edit Profile ──────────────────────────────────────────── -->
+    <string name="edit_profile_title">Editar perfil</string>
+    <string name="edit_profile_section_title">Informações do perfil</string>
+    <string name="edit_profile_section_subtitle">Atualize o seu nome e nome de utilizador.</string>
+    <string name="edit_profile_first_name">Primeiro nome</string>
+    <string name="edit_profile_last_name">Apelido</string>
+    <string name="edit_profile_username">Nome de utilizador</string>
+    <string name="edit_profile_save_button">Guardar perfil</string>
+    <string name="edit_profile_success_title">Perfil atualizado!</string>
+    <string name="edit_profile_success_body">As suas informações de perfil foram guardadas com sucesso.</string>
+    <string name="edit_profile_error_username_short">O nome de utilizador deve ter pelo menos 3 caracteres</string>
+
+    <!-- ── Change Password ───────────────────────────────────────── -->
+    <string name="change_password_title">Alterar palavra-passe</string>
+    <string name="change_password_subtitle">Precisará da sua palavra-passe atual para confirmar a alteração.</string>
+    <string name="change_password_current">Palavra-passe atual</string>
+    <string name="change_password_new">Nova palavra-passe</string>
+    <string name="change_password_confirm">Confirmar nova palavra-passe</string>
+    <string name="change_password_save_button">Guardar palavra-passe</string>
+    <string name="change_password_success_title">Palavra-passe alterada!</string>
+    <string name="change_password_success_body">A sua palavra-passe foi atualizada com sucesso.</string>
+    <string name="change_password_error_mismatch">As palavras-passe não coincidem</string>
+    <string name="change_password_error_too_short">A nova palavra-passe deve ter pelo menos 8 caracteres</string>
+
+    <!-- ── Contact Us ────────────────────────────────────────────── -->
+    <string name="contact_title">Contacte-nos</string>
+    <string name="contact_get_in_touch">Entre em contacto</string>
+    <string name="contact_subtitle">Preencha o formulário e a nossa equipa responderá o mais rapidamente possível.</string>
+    <string name="contact_first_name">Primeiro nome</string>
+    <string name="contact_last_name">Apelido</string>
+    <string name="contact_email">Email</string>
+    <string name="contact_phone">Número de telefone</string>
+    <string name="contact_subject">Assunto</string>
+    <string name="contact_subject_general">Questão geral</string>
+    <string name="contact_subject_complaint">Reclamação ou problema</string>
+    <string name="contact_subject_billing">Problema de faturação ou pagamento</string>
+    <string name="contact_subject_technical">Suporte técnico</string>
+    <string name="contact_message">Mensagem</string>
+    <string name="contact_send_button">Enviar mensagem</string>
+    <string name="contact_error_name">Por favor introduza o seu nome completo</string>
+    <string name="contact_error_email">Por favor introduza um email válido</string>
+    <string name="contact_error_message">Por favor escreva uma mensagem</string>
+    <string name="contact_success_title">Mensagem enviada!</string>
+    <string name="contact_success_body">Entraremos em contacto em breve. A nossa equipa responderá o mais rapidamente possível.</string>
+    <string name="contact_find_us">Encontre-nos</string>
+    <string name="contact_map_marker_title">IPCA - Barcelos</string>
+    <string name="contact_map_marker_snippet">Instituto Politécnico do Cávado e do Ave</string>
+    <string name="contact_info_section">Informações de contacto</string>
+    <string name="contact_info_email_label">Email</string>
+    <string name="contact_info_email_value">support@scriptumai.com</string>
+    <string name="contact_info_phone_label">Telefone</string>
+    <string name="contact_info_phone_value">+351 253 000 000</string>
+    <string name="contact_info_address_label">Morada</string>
+    <string name="contact_info_address_value">Campus do IPCA, Barcelos, Portugal</string>
+
+    <!-- ── Bottom Nav (Support) ──────────────────────────────────── -->
+    <string name="nav_home">Início</string>
+    <string name="nav_contact">Contacto</string>
+    <string name="nav_help_desk">Suporte</string>
+
+    <!-- ── Help Desk ─────────────────────────────────────────────── -->
+    <string name="helpdesk_hero_title">Estamos aqui para ajudar</string>
+    <string name="helpdesk_hero_subtitle">Navegue pelas nossas perguntas frequentes ou pesquise um tópico específico abaixo.</string>
+    <string name="helpdesk_search_hint">Pesquisar perguntas…</string>
+    <string name="helpdesk_faq_title">Perguntas Frequentes</string>
+    <string name="helpdesk_no_results">Sem resultados para "%1$s"</string>
+    <string name="helpdesk_still_need_help">Ainda precisa de ajuda?</string>
+    <string name="helpdesk_support_ready">A nossa equipa de suporte está pronta para o ajudar.</string>
+    <string name="helpdesk_contact_us">Contacte-nos</string>
+    <string name="helpdesk_faq_q1">Como faço o upload de um documento?</string>
+    <string name="helpdesk_faq_a1">Vá ao separador Carregar na navegação principal. Selecione o seu ficheiro, preencha os detalhes do documento e toque em Carregar. A IA processará automaticamente.</string>
+    <string name="helpdesk_faq_q2">Como funciona o chatbot de IA?</string>
+    <string name="helpdesk_faq_a2">Após o processamento de um documento, abra-o e use o painel de chat na parte inferior. Pode fazer perguntas sobre o conteúdo do documento e a IA responderá com base nele. Cada documento tem uma quota de mensagens.</string>
+    <string name="helpdesk_faq_q3">Como altero a minha palavra-passe?</string>
+    <string name="helpdesk_faq_a3">Navegue para Perfil → Alterar palavra-passe. Introduza a sua palavra-passe atual e a nova, e toque em Guardar palavra-passe.</string>
+    <string name="helpdesk_faq_q4">Qual é o período de teste?</string>
+    <string name="helpdesk_faq_a4">As novas contas começam com um teste gratuito de 15 dias. Pode ver quantos dias restam no ecrã do Perfil. Após o teste, precisará de atualizar para um plano pago para continuar.</string>
+    <string name="helpdesk_faq_q5">Como edito as informações do meu perfil?</string>
+    <string name="helpdesk_faq_a5">Vá a Perfil → Editar perfil. Atualize o seu primeiro nome, apelido ou nome de utilizador e toque em Guardar perfil.</string>
+    <string name="helpdesk_faq_q6">Como elimino um documento?</string>
+    <string name="helpdesk_faq_a6">Abra o documento no separador Documentos. Toque no ícone de eliminar na barra superior e confirme. Esta ação é permanente e não pode ser desfeita.</string>
+    <string name="helpdesk_faq_q7">Porque é que o meu documento ainda está a ser processado?</string>
+    <string name="helpdesk_faq_a7">O processamento por IA pode demorar alguns minutos dependendo do tamanho do documento. O estado será atualizado automaticamente. Se demorar mais de 10 minutos, tente atualizar ou contacte o suporte.</string>
+    <string name="helpdesk_faq_q8">Como contacto o suporte?</string>
+    <string name="helpdesk_faq_a8">Use o ecrã Contacte-nos para nos enviar uma mensagem. Também pode contactar-nos em support@scriptumai.com ou ligar para +351 253 000 000 durante o horário de expediente.</string>
+
+    <!-- ── Documents ─────────────────────────────────────────────── -->
+    <string name="documents_sort_newest">Mais recentes primeiro</string>
+    <string name="documents_sort_oldest">Mais antigos primeiro</string>
+    <string name="documents_sort_name_az">Nome A–Z</string>
+    <string name="documents_sort_name_za">Nome Z–A</string>
+    <string name="documents_sort_largest">Maior tamanho</string>
+    <string name="documents_search_hint">Pesquisar documentos…</string>
+    <string name="documents_filter_all">Todos</string>
+    <string name="documents_filter_recent">Recentes</string>
+    <string name="documents_count_singular">documento</string>
+    <string name="documents_count_plural">documentos</string>
+    <string name="documents_edit_dialog_title">Editar documento</string>
+    <string name="documents_field_name">Nome</string>
+    <string name="documents_field_description">Descrição</string>
+    <string name="documents_field_department">Departamento</string>
+    <string name="documents_no_department">Sem departamento</string>
+    <string name="documents_delete_dialog_title">Eliminar documento</string>
+    <string name="documents_delete_confirm">Tem a certeza que quer eliminar \"%1$s\"? Esta ação não pode ser desfeita.</string>
+    <string name="documents_sort_label">Ordenar</string>
+    <string name="documents_empty">Nenhum documento encontrado</string>
+    <string name="documents_empty_search">Sem resultados para \"%1$s\"</string>
+    <string name="documents_empty_dept">Sem documentos em \"%1$s\"</string>
+    <string name="documents_upload_first">Carregue o seu primeiro documento</string>
+    <string name="documents_load_failed">Falha ao carregar documentos</string>
+    <string name="documents_no_dept_short">Sem dept.</string>
+    <string name="documents_status_pending">Pendente</string>
+    <string name="documents_status_processing">A processar</string>
+    <string name="documents_status_completed">Concluído</string>
+    <string name="documents_status_error">Erro</string>
+
+    <!-- ── Add Document ───────────────────────────────────────────── -->
+    <string name="add_document_title">Novos documentos</string>
+    <string name="add_document_drop_hint">Arraste ou solte o ficheiro aqui\nou</string>
+    <string name="add_document_upload_button">Escolher ficheiro</string>
+    <string name="add_document_change_button">Alterar ficheiro</string>
+    <string name="add_document_scan_button">Digitalizar</string>
+    <string name="add_document_supported_files">Ficheiros suportados: PDF, DOCX, TXT, JPG, PNG</string>
+    <string name="add_document_file_details">Detalhes do ficheiro</string>
+    <string name="add_document_name_label">Nome do documento</string>
+    <string name="add_document_name_hint">Introduza um nome</string>
+    <string name="add_document_description_label">Descrição</string>
+    <string name="add_document_description_hint">Introduza uma descrição (opcional)</string>
+    <string name="add_document_category_label">Categoria</string>
+    <string name="add_document_category_general">Geral</string>
+    <string name="add_document_uploading">A carregar documento…</string>
+    <string name="add_document_ai_processing">A IA está a processar…</string>
+    <string name="add_document_whats_happening">O que está a acontecer</string>
+    <string name="add_document_step1_title">A enviar o seu ficheiro</string>
+    <string name="add_document_step1_desc">Transferência segura para os nossos servidores</string>
+    <string name="add_document_step2_title">A extrair conteúdo</string>
+    <string name="add_document_step2_desc">A ler texto e estrutura do documento</string>
+    <string name="add_document_step3_title">A treinar a IA</string>
+    <string name="add_document_step3_desc">A preparar o modelo para responder às suas perguntas</string>
+    <string name="add_document_once_ready">Quando pronto, poderá…</string>
+    <string name="add_document_feature_chat">Conversar com o seu documento</string>
+    <string name="add_document_feature_summary">Obter resumos instantâneos</string>
+    <string name="add_document_feature_search">Pesquisar tópicos específicos</string>
+    <string name="add_document_ready">Pronto para analisar!</string>
+    <string name="add_document_failed">Falha no carregamento</string>
+    <string name="add_document_ai_note">A IA está a trabalhar.</string>
+
+    <!-- ── Document Detail ───────────────────────────────────────── -->
+    <string name="doc_detail_unsaved_title">Alterações não guardadas</string>
+    <string name="doc_detail_unsaved_body">Tem alterações não guardadas. Quer descartá-las?</string>
+    <string name="doc_detail_discard">Descartar</string>
+    <string name="doc_detail_keep_editing">Continuar a editar</string>
+    <string name="doc_detail_edit_title">Editar documento</string>
+    <string name="doc_detail_delete_title">Eliminar documento</string>
+    <string name="doc_detail_delete_confirm">Tem a certeza que quer eliminar \"%1$s\"? Esta ação não pode ser desfeita.</string>
+    <string name="doc_detail_refresh_ai">Atualizar estado da IA</string>
+    <string name="doc_detail_ai_summary">Resumo da IA</string>
+    <string name="doc_detail_ai_queued">Documento em fila para processamento pela IA.</string>
+    <string name="doc_detail_ai_processing">A IA está atualmente a analisar este documento…</string>
+    <string name="doc_detail_ai_failed">O processamento pela IA falhou para este documento.</string>
+    <string name="doc_detail_read_more">Ler mais</string>
+    <string name="doc_detail_show_less">Mostrar menos</string>
+    <string name="doc_detail_no_summary">Nenhum resumo disponível.</string>
+    <string name="doc_detail_metadata">Metadados</string>
+    <string name="doc_detail_file_type">Tipo de ficheiro</string>
+    <string name="doc_detail_file_size">Tamanho do ficheiro</string>
+    <string name="doc_detail_uploaded">Carregado</string>
+    <string name="doc_detail_uploaded_by">Carregado por</string>
+    <string name="doc_detail_department">Departamento</string>
+    <string name="doc_detail_description">Descrição</string>
+    <string name="doc_detail_view">Ver documento</string>
+    <string name="doc_detail_download">Descarregar</string>
+    <string name="doc_detail_share">Partilhar</string>
+    <string name="doc_detail_chatbot">Chatbot</string>
+    <string name="doc_detail_questions_remaining">%1$d perguntas restantes</string>
+    <string name="doc_detail_chat_hint">Faça uma pergunta sobre este documento.</string>
+    <string name="doc_detail_ai_thinking">A IA está a pensar…</string>
+    <string name="doc_detail_ai_slow">Isto pode demorar alguns minutos.</string>
+    <string name="doc_detail_quota_exhausted">Quota de perguntas esgotada.</string>
+    <string name="doc_detail_chat_input_hint">Escreva a sua pergunta…</string>
+    <string name="doc_detail_send">Enviar</string>
+
+    <!-- ── Global Chat ──────────────────────────────────────────── -->
+    <string name="global_chat_title">Chat Global</string>
+    <string name="global_chat_tab">Chat IA</string>
+    <string name="global_chat_remaining">%1$d perguntas restantes</string>
+    <string name="global_chat_input_hint">Pergunte sobre qualquer documento…</string>
+    <string name="global_chat_send">Enviar</string>
+    <string name="global_chat_thinking">A IA está a pensar…</string>
+    <string name="global_chat_sources">Fontes</string>
+    <string name="global_chat_empty_title">Pergunte o que quiser</string>
+    <string name="global_chat_empty_subtitle">Faça uma pergunta sobre todos os seus documentos e a IA encontrará a resposta.</string>
+</resources>

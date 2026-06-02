@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - develop
+      - "feature/**"
+      - "feat/**"
+      - "fix/**"
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  lint-and-typecheck:
+    name: Lint and Type Check
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - name: authentication-service
+            path: ./services/authentication-service
+            node-version: "20"
+            package-manager: npm
+            has-typecheck: false
+          - name: document-service
+            path: ./services/document-service
+            node-version: "20"
+            package-manager: pnpm
+            has-typecheck: true
+          - name: notification-service
+            path: ./services/notification-service
+            node-version: "20"
+            package-manager: npm
+            has-typecheck: false
+          - name: organization-service
+            path: ./services/organization-service
+            node-version: "20"
+            package-manager: npm
+            has-typecheck: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.service.node-version }}
+
+      - name: Setup pnpm
+        if: matrix.service.package-manager == 'pnpm'
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.service.path }}
+        run: |
+          if [ "${{ matrix.service.package-manager }}" = "pnpm" ]; then
+            pnpm install --no-frozen-lockfile
+          else
+            npm install
+          fi
+
+      - name: Run linting
+        working-directory: ${{ matrix.service.path }}
+        run: |
+          if [ "${{ matrix.service.package-manager }}" = "pnpm" ]; then
+            pnpm run lint
+          else
+            npm run lint
+          fi
+
+      - name: Run type check
+        if: matrix.service.has-typecheck
+        working-directory: ${{ matrix.service.path }}
+        run: |
+          if [ "${{ matrix.service.package-manager }}" = "pnpm" ]; then
+            pnpm run build
+          else
+            npm run build
+          fi

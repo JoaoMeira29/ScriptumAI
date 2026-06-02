@@ -1,0 +1,14 @@
+*.aux
+*.log
+*.toc
+*.lof
+*.lot
+*.out
+*.bbl
+*.blg
+*.glo
+*.glsdefs
+*.ist
+*.acn
+*.synctex.gz
+CHANGELOG

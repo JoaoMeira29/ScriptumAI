@@ -1,0 +1,1598 @@
+{
+  "info": {
+    "name": "ScriptumAI Microservices - Test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Initial Setup",
+      "description": "Setup inicial - criar primeira organização e utilizador admin",
+      "item": [
+        {
+          "name": "Create First Organization (Bootstrap)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// verificar se a organização foi criada",
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Organização criada\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData.name).to.eql('ScriptumAI Portugal');",
+                  "    ",
+                  "    // guardar o ID para usar nos próximos pedidos",
+                  "    pm.environment.set('organizationId', jsonData.id);",
+                  "});",
+                  "",
+                  "pm.test(\"Todos os campos presentes\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.all.keys('id', 'name', 'email', 'subdomain', 'sector', 'city', 'address', 'contact', 'zipCode', 'status', 'createdAt', 'updatedAt');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"ScriptumAI Portugal\",\n  \"email\": \"geral@scriptumai.pt\",\n  \"subdomain\": \"scriptumai\",\n  \"sector\": \"Tecnologia e Inteligência Artificial\",\n  \"city\": \"Lisboa\",\n  \"address\": \"Avenida da Liberdade 123, 4º Andar\",\n  \"contact\": 213456789,\n  \"zipCode\": \"1250-096\",\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/organizations/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "organizations", "register"]
+            },
+            "description": "Endpoint de bootstrap - cria a primeira organização sem autenticação"
+          },
+          "response": []
+        },
+        {
+          "name": "Register Admin User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"User registado como admin\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.be.true;",
+                  "    pm.expect(jsonData.data).to.have.property('user');",
+                  "    pm.expect(jsonData.data).to.have.property('accessToken');",
+                  "});",
+                  "",
+                  "// guardar tokens para usar depois",
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set('adminAccessToken', jsonData.data.accessToken);",
+                  "pm.environment.set('adminRefreshToken', jsonData.data.refreshToken);",
+                  "pm.environment.set('adminUserId', jsonData.data.user.id);",
+                  "",
+                  "// verificar se tem role de admin no token",
+                  "pm.test(\"JWT tem role admin\", function () {",
+                  "    var token = jsonData.data.accessToken;",
+                  "    var payload = JSON.parse(atob(token.split('.')[1]));",
+                  "    pm.expect(payload.role).to.eql('admin');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"joao.silva@scriptumai.pt\",\n  \"password\": \"Admin@2025\",\n  \"name\": \"João\",\n  \"surname\": \"Silva\",\n  \"username\": \"joao.silva\",\n  \"organizationId\": \"{{organizationId}}\",\n  \"role\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Registo do primeiro admin user"
+          },
+          "response": []
+        },
+        {
+          "name": "Register Regular User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "pm.test(\"User registado com sucesso\", function () {",
+                  "    pm.expect(jsonData.success).to.be.true;",
+                  "});",
+                  "",
+                  "pm.environment.set('userAccessToken', jsonData.data.accessToken);",
+                  "pm.environment.set('userRefreshToken', jsonData.data.refreshToken);",
+                  "pm.environment.set('userId', jsonData.data.user.id);",
+                  "",
+                  "pm.test(\"Role é user (não admin)\", function () {",
+                  "    var token = jsonData.data.accessToken;",
+                  "    var base64Payload = token.split('.')[1];",
+                  "    var payload = JSON.parse(atob(base64Payload));",
+                  "    pm.expect(payload.role).to.eql('user');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"maria.santos@scriptumai.pt\",\n  \"password\": \"User@2025\",\n  \"name\": \"Maria\",\n  \"surname\": \"Santos\",\n  \"username\": \"maria.santos\",\n  \"organizationId\": \"{{organizationId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Utilizador normal sem permissões admin"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Authentication Service",
+      "description": "Login, profile, refresh tokens, logout",
+      "item": [
+        {
+          "name": "Login as Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Login bem sucedido\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.be.true;",
+                  "    pm.expect(jsonData.message).to.include('Login successful');",
+                  "});",
+                  "",
+                  "// guardar os tokens",
+                  "var jsonData = pm.response.json();",
+                  "pm.expect(jsonData.data.accessToken).to.be.a('string');",
+                  "pm.expect(jsonData.data.refreshToken).to.be.a('string');",
+                  "pm.environment.set('adminAccessToken', jsonData.data.accessToken);",
+                  "pm.environment.set('adminRefreshToken', jsonData.data.refreshToken);",
+                  "",
+                  "pm.test(\"Role admin verificada\", function () {",
+                  "    pm.expect(jsonData.data.user.role).to.eql('admin');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"joao.silva@scriptumai.pt\",\n  \"password\": \"Admin@2025\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Login com credenciais admin"
+          },
+          "response": []
+        },
+        {
+          "name": "Login as Regular User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Login OK\", () => {",
+                  "    var resp = pm.response.json();",
+                  "    pm.expect(resp.success).to.be.true;",
+                  "});",
+                  "",
+                  "var resp = pm.response.json();",
+                  "pm.environment.set('userAccessToken', resp.data.accessToken);",
+                  "pm.environment.set('userRefreshToken', resp.data.refreshToken);",
+                  "",
+                  "pm.test(\"É user normal\", () => {",
+                  "    pm.expect(resp.data.user.role).to.eql('user');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"maria.santos@scriptumai.pt\",\n  \"password\": \"User@2025\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Login user normal"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Admin Profile (/me)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "pm.test(\"Dados do perfil retornados\", function () {",
+                  "    pm.expect(jsonData.success).to.be.true;",
+                  "    pm.expect(jsonData.data.user).to.have.property('email');",
+                  "    pm.expect(jsonData.data.user).to.have.property('role');",
+                  "});",
+                  "",
+                  "pm.test(\"É admin\", function () {",
+                  "    pm.expect(jsonData.data.user.role).to.eql('admin');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            },
+            "description": "Ver perfil do admin atual"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Profile (/profile)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Perfil OK\", function () {",
+                  "    var data = pm.response.json();",
+                  "    pm.expect(data.success).to.be.true;",
+                  "    pm.expect(data.data.user).to.have.property('email');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "profile"]
+            },
+            "description": "Endpoint alternativo para ver perfil"
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Admin Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Novos tokens recebidos\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.be.true;",
+                  "    pm.expect(jsonData.data.accessToken).to.be.a('string');",
+                  "    ",
+                  "    // atualizar environment",
+                  "    pm.environment.set('adminAccessToken', jsonData.data.accessToken);",
+                  "    pm.environment.set('adminRefreshToken', jsonData.data.refreshToken);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{adminRefreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "refresh"]
+            },
+            "description": "Renovar token expirado"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var resp = pm.response.json();",
+                  "pm.test(\"Logout efetuado\", function () {",
+                  "    pm.expect(resp.success).to.be.true;",
+                  "    pm.expect(resp.message).to.include('Logout successful');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "logout"]
+            },
+            "description": "Fazer logout"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Organization Service",
+      "description": "Testar permissões - Admin vs User normal",
+      "item": [
+        {
+          "name": "List All Organizations (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Lista de organizações\", function () {",
+                  "    var data = pm.response.json();",
+                  "    pm.expect(data).to.be.an('array');",
+                  "    pm.expect(data.length).to.be.greaterThan(0);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/organizations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "organizations"]
+            },
+            "description": "Listar todas as orgs"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Organization by ID (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Detalhes da org\", () => {",
+                  "    var org = pm.response.json();",
+                  "    pm.expect(org).to.have.property('id');",
+                  "    pm.expect(org).to.have.property('name');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/organizations/{{organizationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "organizations", "{{organizationId}}"]
+            },
+            "description": "Ver detalhes de uma organização específica"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Organization (Admin) ✅",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Created - 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "pm.test(\"Organização criada pelo admin\", function () {",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData.name).to.eql('TechVision Lisboa');",
+                  "    pm.environment.set('secondOrganizationId', jsonData.id);",
+                  "});",
+                  "",
+                  "// importante - admin consegue criar",
+                  "pm.test(\"Admin tem permissão\", function () {",
+                  "    pm.response.to.not.have.status(403);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"TechVision Lisboa\",\n  \"email\": \"contacto@techvision.pt\",\n  \"subdomain\": \"techvision\",\n  \"sector\": \"Consultoria Tecnológica\",\n  \"city\": \"Lisboa\",\n  \"address\": \"Rua do Ouro 85, 2º Esq\",\n  \"contact\": 218765432,\n  \"zipCode\": \"1100-060\",\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/organizations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "organizations"]
+            },
+            "description": "Admin pode criar organizações"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Organization (Regular User) ❌",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// deve dar 403 forbidden",
+                  "pm.test(\"Forbidden - 403\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "",
+                  "pm.test(\"User normal não pode criar orgs\", function () {",
+                  "    var resp = pm.response.json();",
+                  "    pm.expect(resp.message).to.include('Access denied');",
+                  "    pm.expect(resp.message).to.include('admin');",
+                  "    pm.expect(resp.error).to.eql('Forbidden');",
+                  "});",
+                  "",
+                  "pm.test(\"Mensagem menciona role necessária\", function () {",
+                  "    var resp = pm.response.json();",
+                  "    pm.expect(resp.message).to.match(/Required roles: admin/);",
+                  "    pm.expect(resp.message).to.match(/Your role: user/);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Empresa Não Autorizada\",\n  \"email\": \"teste@unauthorized.pt\",\n  \"subdomain\": \"unauthorized\",\n  \"sector\": \"Teste\",\n  \"city\": \"Porto\",\n  \"address\": \"Rua Teste 123\",\n  \"contact\": 220000000,\n  \"zipCode\": \"4000-000\",\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/organizations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "organizations"]
+            },
+            "description": "Isto deve falhar - user sem permissões"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Organization (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Org atualizada\", function () {",
+                  "    var org = pm.response.json();",
+                  "    pm.expect(org).to.have.property('id');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"ScriptumAI Portugal - Atualizado\",\n  \"email\": \"geral@scriptumai.pt\",\n  \"subdomain\": \"scriptumai\",\n  \"sector\": \"IA e Machine Learning\",\n  \"city\": \"Lisboa\",\n  \"address\": \"Avenida da Liberdade 123, 5º Andar\",\n  \"contact\": 213456789,\n  \"zipCode\": \"1250-096\",\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/organizations/{{organizationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "organizations", "{{organizationId}}"]
+            },
+            "description": "Atualizar dados da org"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Organization (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Apagada com sucesso\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+                  "});",
+                  "",
+                  "pm.test(\"Sem erros\", function () {",
+                  "    pm.expect(pm.response.text()).to.not.include('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/organizations/{{secondOrganizationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "organizations", "{{secondOrganizationId}}"]
+            },
+            "description": "Apagar a segunda organização de teste"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Document Service",
+      "description": "Gestão de documentos",
+      "item": [
+        {
+          "name": "Create Document",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Documento criado - 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var doc = pm.response.json();",
+                  "",
+                  "pm.test(\"Doc criado com sucesso\", function () {",
+                  "    pm.expect(doc).to.have.property('id');",
+                  "    pm.expect(doc.title).to.eql('Proposta Comercial 2025');",
+                  "    pm.environment.set('documentId', doc.id);",
+                  "});",
+                  "",
+                  "pm.test(\"Campos todos presentes\", function () {",
+                  "    pm.expect(doc).to.have.all.keys('id', 'title', 'content', 'status', 'organizationId', 'createdBy', 'createdAt', 'updatedAt');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Proposta Comercial 2025\",\n  \"content\": \"Prezados Clientes,\\n\\nApresentamos a nossa proposta comercial para implementação de soluções de Inteligência Artificial na vossa organização.\\n\\n## Âmbito do Projeto\\n- Análise de Requisitos\\n- Desenvolvimento de Modelos de IA\\n- Integração com Sistemas Existentes\\n- Formação de Colaboradores\\n\\n## Cronograma\\nDuração: 6 meses\\nInício: Janeiro 2025\\n\\n## Investimento\\nValor: 50.000€ + IVA\\n\\nFicamos ao dispor para esclarecimentos adicionais.\\n\\nCumprimentos,\\nEquipa ScriptumAI\",\n  \"status\": \"draft\",\n  \"organizationId\": \"{{organizationId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/documents",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "documents"]
+            },
+            "description": "Criar novo documento"
+          },
+          "response": []
+        },
+        {
+          "name": "List All Documents",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Documentos listados\", () => {",
+                  "    var docs = pm.response.json();",
+                  "    pm.expect(docs).to.be.an('array');",
+                  "    pm.expect(docs.length).to.be.greaterThan(0);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/documents",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "documents"]
+            },
+            "description": "Ver todos os docs da org"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Document by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Detalhes do documento\", function () {",
+                  "    var doc = pm.response.json();",
+                  "    pm.expect(doc).to.have.property('id');",
+                  "    pm.expect(doc).to.have.property('title');",
+                  "    pm.expect(doc).to.have.property('content');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/documents/{{documentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "documents", "{{documentId}}"]
+            },
+            "description": "Buscar doc específico"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Document",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// verificar se mudou para published",
+                  "pm.test(\"Doc atualizado\", function () {",
+                  "    var doc = pm.response.json();",
+                  "    pm.expect(doc.status).to.eql('published');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Proposta Comercial 2025 - Revista\",\n  \"content\": \"Prezados Clientes,\\n\\nApresentamos a nossa proposta comercial REVISTA para implementação de soluções de Inteligência Artificial.\\n\\n## Âmbito do Projeto (Atualizado)\\n- Análise de Requisitos e Diagnóstico\\n- Desenvolvimento de Modelos de IA Personalizados\\n- Integração Completa com Sistemas Existentes\\n- Formação Intensiva de Colaboradores\\n- Suporte Pós-Implementação (3 meses)\\n\\n## Cronograma Revisto\\nDuração: 8 meses\\nInício: Janeiro 2025\\nConclusão: Agosto 2025\\n\\n## Investimento Final\\nValor: 65.000€ + IVA\\nCondições de Pagamento: 3 tranches\\n\\nFicamos ao dispor para esclarecimentos.\\n\\nCumprimentos,\\nEquipa ScriptumAI Portugal\",\n  \"status\": \"published\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/documents/{{documentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "documents", "{{documentId}}"]
+            },
+            "description": "Atualizar doc e mudar status"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Document",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Apagado\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/documents/{{documentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "documents", "{{documentId}}"]
+            },
+            "description": "Apagar documento de teste"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notification Service",
+      "description": "Sistema de notificações",
+      "item": [
+        {
+          "name": "Send Notification",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Notificação enviada - 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var notif = pm.response.json();",
+                  "",
+                  "pm.test(\"Enviada com sucesso\", function () {",
+                  "    pm.expect(notif).to.have.property('id');",
+                  "    pm.expect(notif.message).to.include('Bem-vindo');",
+                  "    pm.environment.set('notificationId', notif.id);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recipientEmail\": \"joao.silva@scriptumai.pt\",\n  \"subject\": \"Bem-vindo ao ScriptumAI!\",\n  \"bodyHtml\": \"<h1>Bem-vindo ao ScriptumAI!</h1><p>A sua conta foi criada com sucesso. Explore todas as funcionalidades da nossa plataforma de IA.</p><ul><li>Gestão de documentos</li><li>Notificações em tempo real</li><li>Colaboração em equipa</li></ul>\",\n  \"bodyText\": \"Bem-vindo ao ScriptumAI! A sua conta foi criada com sucesso. Explore todas as funcionalidades da nossa plataforma de IA.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/send",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications", "send"]
+            },
+            "description": "Enviar notificação de boas-vindas"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Notifications",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Lista de notifs\", () => {",
+                  "    var notifs = pm.response.json();",
+                  "    pm.expect(notifs).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/user/{{adminUserId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications", "user", "{{adminUserId}}"]
+            },
+            "description": "Ver notificações do admin"
+          },
+          "response": []
+        },
+        {
+          "name": "Mark Notification as Read",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Marcada como lida\", function () {",
+                  "    var notif = pm.response.json();",
+                  "    pm.expect(notif.isRead).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isRead\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/{{notificationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications", "{{notificationId}}"]
+            },
+            "description": "Marcar como lida"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Notification",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Apagada OK\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/{{notificationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications", "{{notificationId}}"]
+            },
+            "description": "Apagar notificação"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Invites & RabbitMQ Events",
+      "description": "Testar convites com eventos RabbitMQ assíncronos",
+      "item": [
+        {
+          "name": "Create Invite (Triggers RabbitMQ Event)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Convite criado - 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var invite = pm.response.json();",
+                  "",
+                  "pm.test(\"Convite tem todos os campos\", function () {",
+                  "    pm.expect(invite).to.have.property('id');",
+                  "    pm.expect(invite).to.have.property('email');",
+                  "    pm.expect(invite).to.have.property('token');",
+                  "    pm.expect(invite).to.have.property('organizationId');",
+                  "    pm.expect(invite).to.have.property('role');",
+                  "    pm.expect(invite).to.have.property('expiresAt');",
+                  "    pm.expect(invite).to.have.property('organization');",
+                  "});",
+                  "",
+                  "pm.test(\"Email correto\", function () {",
+                  "    pm.expect(invite.email).to.eql('pedro.costa@example.com');",
+                  "});",
+                  "",
+                  "pm.test(\"Token gerado\", function () {",
+                  "    pm.expect(invite.token).to.be.a('string');",
+                  "    pm.expect(invite.token.length).to.be.at.least(32);",
+                  "});",
+                  "",
+                  "// Guardar para aceitar depois",
+                  "pm.environment.set('inviteId', invite.id);",
+                  "pm.environment.set('inviteToken', invite.token);",
+                  "",
+                  "// INFO: Agora verifica os logs do notification-service",
+                  "console.log('✅ Convite criado! Evento invite.created enviado para RabbitMQ.');",
+                  "console.log('📧 Verifica: docker-compose logs -f notification-service');",
+                  "console.log('📬 Email enviado para: http://localhost:8025 (Mailpit)');",
+                  "console.log('🐰 RabbitMQ UI: http://localhost:15672 (rabbitmq/rabbitmq)');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"organizationId\": \"{{organizationId}}\",\n  \"email\": \"pedro.costa@example.com\",\n  \"role\": \"USER\",\n  \"userId\": \"{{adminUserId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/invites",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "invites"]
+            },
+            "description": "Cria convite e dispara evento RabbitMQ 'invite.created' de forma assíncrona. O notification-service recebe e envia email."
+          },
+          "response": []
+        },
+        {
+          "name": "List All Invites",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Lista de invites\", () => {",
+                  "    var invites = pm.response.json();",
+                  "    pm.expect(invites).to.be.an('array');",
+                  "    if (invites.length > 0) {",
+                  "        pm.expect(invites[0]).to.have.property('email');",
+                  "        pm.expect(invites[0]).to.have.property('organization');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/invites",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "invites"]
+            },
+            "description": "Listar todos os convites (opcionalmente filtrar por organizationId)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Invite by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Convite encontrado\", () => {",
+                  "    var invite = pm.response.json();",
+                  "    pm.expect(invite).to.have.property('id');",
+                  "    pm.expect(invite).to.have.property('email');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/invites/{{inviteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "invites", "{{inviteId}}"]
+            },
+            "description": "Ver detalhes de um convite específico"
+          },
+          "response": []
+        },
+        {
+          "name": "Accept Invite",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Convite aceite - 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var membership = pm.response.json();",
+                  "",
+                  "pm.test(\"Membership criada\", function () {",
+                  "    pm.expect(membership).to.have.property('id');",
+                  "    pm.expect(membership).to.have.property('userId');",
+                  "    pm.expect(membership).to.have.property('organizationId');",
+                  "    pm.expect(membership).to.have.property('role');",
+                  "});",
+                  "",
+                  "console.log('✅ Convite aceite! User agora é membro da organização.');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{inviteToken}}\",\n  \"userId\": \"{{userId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/invites/{{inviteId}}/accept",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "invites", "{{inviteId}}", "accept"]
+            },
+            "description": "Aceitar convite com o token recebido. Cria membership automaticamente."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Invite",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Convite apagado\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/invites/{{inviteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "invites", "{{inviteId}}"]
+            },
+            "description": "Apagar convite (apenas admins/owners)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Document Service",
+      "description": "Upload e gestão de documentos com processamento RAG assíncrono",
+      "item": [
+        {
+          "name": "Upload Document (Text)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 ou 201\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "pm.test(\"Documento criado com sucesso\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData).to.have.property('fileName');",
+                  "    pm.expect(jsonData).to.have.property('originalName');",
+                  "    pm.expect(jsonData.mimeType).to.include('text');",
+                  "    ",
+                  "    // Guardar ID do documento para próximos testes",
+                  "    pm.environment.set('documentId', jsonData.id);",
+                  "});",
+                  "",
+                  "pm.test(\"Campos obrigatórios presentes\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.organizationId).to.eql(pm.environment.get('organizationId'));",
+                  "    pm.expect(jsonData.uploadedBy).to.be.a('string');",
+                  "});",
+                  "",
+                  "console.log('✅ Documento enviado! ID:', pm.response.json().id);",
+                  "console.log('🤖 Processamento RAG iniciado em background...');",
+                  "console.log('📊 Verifique os logs do AI Service para ver o resultado.');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userAccessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "organizationId",
+                  "value": "{{organizationId}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/documents",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "documents"]
+            },
+            "description": "Upload de documento de texto. O documento será processado assincronamente pelo AI Service usando RAG (Retrieval-Augmented Generation). O sistema irá:\n\n1. Guardar o ficheiro no MinIO\n2. Criar registo na base de dados\n3. Publicar evento 'document.uploaded' no RabbitMQ\n4. AI Service processa com RAG:\n   - Download do documento\n   - Extração de texto e chunking\n   - Geração de embeddings (HuggingFace)\n   - Armazenamento no ChromaDB\n   - Análise com LLM (Llama 3.1)\n5. Resultado publicado em 'document.processed'\n6. Document Service recebe resultado\n\nPara testar:\n1. Selecione um ficheiro .txt em 'file'\n2. O organizationId será preenchido automaticamente\n3. Verifique os logs com: docker logs scriptumai-document-service --tail=50"
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Document (PDF)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 ou 201\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "pm.test(\"PDF enviado com sucesso\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData.mimeType).to.include('pdf');",
+                  "});",
+                  "",
+                  "console.log('✅ PDF enviado! ID:', pm.response.json().id);",
+                  "console.log('🤖 RAG processando PDF com PyPDFLoader...');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userAccessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "organizationId",
+                  "value": "{{organizationId}}",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Documento PDF para processamento RAG",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/documents",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "documents"]
+            },
+            "description": "Upload de PDF para processamento com RAG. O AI Service usa PyPDFLoader do LangChain para extrair texto do PDF antes de processar."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Document by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Documento obtido\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var doc = pm.response.json();",
+                  "    pm.expect(doc.id).to.eql(pm.environment.get('documentId'));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/documents/{{documentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "documents", "{{documentId}}"]
+            },
+            "description": "Obter metadados de um documento pelo ID"
+          },
+          "response": []
+        },
+        {
+          "name": "List Organization Documents",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Lista de documentos obtida\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var docs = pm.response.json();",
+                  "    pm.expect(docs).to.be.an('array');",
+                  "});",
+                  "",
+                  "console.log('📄 Total de documentos:', pm.response.json().length);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/documents?organizationId={{organizationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "documents"],
+              "query": [
+                {
+                  "key": "organizationId",
+                  "value": "{{organizationId}}"
+                }
+              ]
+            },
+            "description": "Listar todos os documentos de uma organização"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Document",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Documento apagado\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+                  "});",
+                  "",
+                  "console.log('🗑️ Documento removido do MinIO e base de dados');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/documents/{{documentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "documents", "{{documentId}}"]
+            },
+            "description": "Apagar documento do sistema (MinIO + PostgreSQL)"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost",
+      "type": "string"
+    }
+  ]
+}

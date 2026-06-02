@@ -1,0 +1,9 @@
+{
+  "name": "scriptumai-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ScriptumAI API — microservices backend",
+  "scripts": {
+    "seed": "docker compose run --rm --build db-seed"
+  }
+}

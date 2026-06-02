@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ScriptumAI</string>
+    <string name="google_maps_key">AIzaSyDQaFd6HjygFLrtqraUAXXxa4u5NfAkreY</string>
+
+    <!-- ── Common ─────────────────────────────────────────────────── -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="retry">Retry</string>
+    <string name="back">Back</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="error_something_went_wrong">Something went wrong</string>
+    <string name="all_fields_required">All fields are required</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+
+    <!-- ── Login ─────────────────────────────────────────────────── -->
+    <string name="login_title">Login</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_forgot_password">Forgot the Password?</string>
+    <string name="login_sign_up">Sign Up</string>
+    <string name="login_copyright">© %1$s. All Rights Reserved to ScriptumAI</string>
+    <string name="login_logo_description">ScriptumAI Logo</string>
+
+    <!-- ── Register ─────────────────────────────────────────────── -->
+    <string name="register_title">Create organization</string>
+    <string name="register_subtitle">Choose a plan first, then complete your registration.</string>
+    <string name="register_trial_note">The Free Trial plan gives immediate access for 15 days. Paid plans keep the standard subscription flow.</string>
+    <string name="register_popular">Popular</string>
+    <string name="register_org_details">Organization details</string>
+    <string name="register_fill_details">Fill in your details to create the account.</string>
+    <string name="register_first_name">First name</string>
+    <string name="register_last_name">Last name</string>
+    <string name="register_username_optional">Username (optional)</string>
+    <string name="register_username_hint">joao.silva</string>
+    <string name="register_org_name">Organization name</string>
+    <string name="register_city">City</string>
+    <string name="register_address">Address</string>
+    <string name="register_contact">Contact</string>
+    <string name="register_zip_code">ZIP code</string>
+    <string name="register_work_email">Work email</string>
+    <string name="register_confirm_password">Confirm password</string>
+    <string name="register_trial_accept">I confirm that I accept the terms to start the 15-day Free Trial with immediate access.</string>
+    <string name="register_cta">Create account and start trial</string>
+    <string name="register_paid_note">Note: Paid plans are not yet available for direct activation.</string>
+    <string name="register_already_have_account">I already have an account</string>
+
+    <!-- ── Forgot Password ───────────────────────────────────────── -->
+    <string name="forgot_password_title">Forgot Password</string>
+    <string name="forgot_password_subtitle">Enter your email address and we\'ll send you a link to reset your password.</string>
+    <string name="forgot_password_email_label">Email Address</string>
+    <string name="forgot_password_send_button">Send Reset Email</string>
+    <string name="forgot_password_check_email_title">Check your email</string>
+    <string name="forgot_password_check_email_body">We have sent a password reset link to:</string>
+    <string name="forgot_password_instructions">Please follow the instructions in the email to reset your password on the web.</string>
+    <string name="forgot_password_back_to_login">Back to Login</string>
+
+    <!-- ── Pricing ───────────────────────────────────────────────── -->
+    <string name="pricing_title">Pricing</string>
+    <string name="pricing_subtitle">Choose Free Trial for 15-day demo access, or choose a paid plan.</string>
+    <string name="pricing_back_to_login">Back to Login</string>
+    <string name="pricing_learn_more">Learn more</string>
+    <string name="pricing_most_popular">Most popular</string>
+
+    <!-- ── Home / Dashboard ──────────────────────────────────────── -->
+    <string name="home_dashboard">Dashboard</string>
+    <string name="home_documents">Documents</string>
+    <string name="home_upload">Upload</string>
+    <string name="home_menu">Menu</string>
+    <string name="home_notifications">Notifications</string>
+    <string name="home_settings">Settings</string>
+    <string name="home_theme">Theme</string>
+    <string name="home_theme_light">Light</string>
+    <string name="home_theme_dark">Dark</string>
+    <string name="home_theme_system">System</string>
+    <string name="home_language">Language</string>
+    <string name="home_help">Help</string>
+    <string name="home_logout">Logout</string>
+    <string name="home_welcome_back">Welcome back, %1$s!</string>
+    <string name="home_overview">Here\'s an overview of your content activity.</string>
+    <string name="home_processed">Processed</string>
+    <string name="home_pending">Pending</string>
+    <string name="home_recent_documents">Recent Documents</string>
+    <string name="home_no_documents">No documents yet. Upload your first document!</string>
+    <string name="home_edit_profile">Edit Profile</string>
+
+    <!-- ── Profile ───────────────────────────────────────────────── -->
+    <string name="profile_title">Profile</string>
+    <string name="profile_username">Username</string>
+    <string name="profile_role">Role</string>
+    <string name="profile_status">Status</string>
+    <string name="profile_plan">Plan</string>
+    <string name="profile_trial_remaining">Trial remaining</string>
+    <string name="profile_trial_days">%1$d days</string>
+    <string name="profile_messages_sent">Messages sent</string>
+    <string name="profile_member_since">Member since</string>
+    <string name="profile_edit_profile">Edit Profile</string>
+    <string name="profile_change_password">Change Password</string>
+
+    <!-- ── Edit Profile ──────────────────────────────────────────── -->
+    <string name="edit_profile_title">Edit Profile</string>
+    <string name="edit_profile_section_title">Profile Info</string>
+    <string name="edit_profile_section_subtitle">Update your name and username.</string>
+    <string name="edit_profile_first_name">First Name</string>
+    <string name="edit_profile_last_name">Last Name</string>
+    <string name="edit_profile_username">Username</string>
+    <string name="edit_profile_save_button">Save Profile</string>
+    <string name="edit_profile_success_title">Profile updated!</string>
+    <string name="edit_profile_success_body">Your profile information has been saved successfully.</string>
+    <string name="edit_profile_error_username_short">Username must be at least 3 characters</string>
+
+    <!-- ── Change Password ───────────────────────────────────────── -->
+    <string name="change_password_title">Change Password</string>
+    <string name="change_password_subtitle">You\'ll need your current password to confirm the change.</string>
+    <string name="change_password_current">Current Password</string>
+    <string name="change_password_new">New Password</string>
+    <string name="change_password_confirm">Confirm New Password</string>
+    <string name="change_password_save_button">Save Password</string>
+    <string name="change_password_success_title">Password changed!</string>
+    <string name="change_password_success_body">Your password has been updated successfully.</string>
+    <string name="change_password_error_mismatch">Passwords do not match</string>
+    <string name="change_password_error_too_short">New password must be at least 8 characters</string>
+
+    <!-- ── Contact Us ────────────────────────────────────────────── -->
+    <string name="contact_title">Contact Us</string>
+    <string name="contact_get_in_touch">Get in Touch</string>
+    <string name="contact_subtitle">Fill out the form and our team will respond as soon as possible.</string>
+    <string name="contact_first_name">First Name</string>
+    <string name="contact_last_name">Last Name</string>
+    <string name="contact_email">Email</string>
+    <string name="contact_phone">Phone Number</string>
+    <string name="contact_subject">Subject</string>
+    <string name="contact_subject_general">General Inquiry</string>
+    <string name="contact_subject_complaint">Complaint or Issue</string>
+    <string name="contact_subject_billing">Billing or Payment Issue</string>
+    <string name="contact_subject_technical">Technical Support</string>
+    <string name="contact_message">Message</string>
+    <string name="contact_send_button">Send Message</string>
+    <string name="contact_error_name">Please enter your full name</string>
+    <string name="contact_error_email">Please enter a valid email</string>
+    <string name="contact_error_message">Please write a message</string>
+    <string name="contact_success_title">Message sent!</string>
+    <string name="contact_success_body">We\'ll get back to you soon. Our team will respond as quickly as possible.</string>
+    <string name="contact_find_us">Find Us</string>
+    <string name="contact_map_marker_title">IPCA - Barcelos</string>
+    <string name="contact_map_marker_snippet">Instituto Politécnico do Cávado e do Ave</string>
+    <string name="contact_info_section">Contact Information</string>
+    <string name="contact_info_email_label">Email</string>
+    <string name="contact_info_email_value">support@scriptumai.com</string>
+    <string name="contact_info_phone_label">Phone</string>
+    <string name="contact_info_phone_value">+351 253 000 000</string>
+    <string name="contact_info_address_label">Address</string>
+    <string name="contact_info_address_value">Campus do IPCA, Barcelos, Portugal</string>
+
+    <!-- ── Bottom Nav (Support) ──────────────────────────────────── -->
+    <string name="nav_home">Home</string>
+    <string name="nav_contact">Contact</string>
+    <string name="nav_help_desk">Help Desk</string>
+
+    <!-- ── Help Desk ─────────────────────────────────────────────── -->
+    <string name="helpdesk_hero_title">We\'re here to help you</string>
+    <string name="helpdesk_hero_subtitle">Browse our frequently asked questions or search for a specific topic below.</string>
+    <string name="helpdesk_search_hint">Search questions…</string>
+    <string name="helpdesk_faq_title">Frequently Asked Questions</string>
+    <string name="helpdesk_no_results">No results for "%1$s"</string>
+    <string name="helpdesk_still_need_help">Still need help?</string>
+    <string name="helpdesk_support_ready">Our support team is ready to assist you.</string>
+    <string name="helpdesk_contact_us">Contact Us</string>
+    <string name="helpdesk_faq_q1">How do I upload a document?</string>
+    <string name="helpdesk_faq_a1">Go to the Upload tab in the main navigation. Select your file, fill in the document details, and tap Upload. The AI will process it automatically.</string>
+    <string name="helpdesk_faq_q2">How does the AI chatbot work?</string>
+    <string name="helpdesk_faq_a2">Once a document is processed, open it and use the chat panel at the bottom. You can ask questions about the document content and the AI will respond based on it. Each document has a message quota.</string>
+    <string name="helpdesk_faq_q3">How do I change my password?</string>
+    <string name="helpdesk_faq_a3">Navigate to Profile → Change Password. Enter your current password and the new one, then tap Save Password.</string>
+    <string name="helpdesk_faq_q4">What is the trial period?</string>
+    <string name="helpdesk_faq_a4">New accounts start with a 15-day free trial. You can see how many days remain in your Profile screen. After the trial you\'ll need to upgrade to a paid plan to continue.</string>
+    <string name="helpdesk_faq_q5">How do I edit my profile information?</string>
+    <string name="helpdesk_faq_a5">Go to Profile → Edit Profile. Update your first name, last name, or username and tap Save Profile.</string>
+    <string name="helpdesk_faq_q6">How do I delete a document?</string>
+    <string name="helpdesk_faq_a6">Open the document from the Documents tab. Tap the delete icon in the top bar and confirm. This action is permanent and cannot be undone.</string>
+    <string name="helpdesk_faq_q7">Why is my document still processing?</string>
+    <string name="helpdesk_faq_a7">AI processing can take up to a few minutes depending on the document size. The status will update automatically. If it takes longer than 10 minutes, try refreshing or contact support.</string>
+    <string name="helpdesk_faq_q8">How do I contact support?</string>
+    <string name="helpdesk_faq_a8">Use the Contact Us screen to send us a message. You can also reach us at support@scriptumai.com or call +351 253 000 000 during business hours.</string>
+
+    <!-- ── Documents ─────────────────────────────────────────────── -->
+    <string name="documents_sort_newest">Newest first</string>
+    <string name="documents_sort_oldest">Oldest first</string>
+    <string name="documents_sort_name_az">Name A–Z</string>
+    <string name="documents_sort_name_za">Name Z–A</string>
+    <string name="documents_sort_largest">Largest size</string>
+    <string name="documents_search_hint">Search documents…</string>
+    <string name="documents_filter_all">All</string>
+    <string name="documents_filter_recent">Recent</string>
+    <string name="documents_count_singular">document</string>
+    <string name="documents_count_plural">documents</string>
+    <string name="documents_edit_dialog_title">Edit document</string>
+    <string name="documents_field_name">Name</string>
+    <string name="documents_field_description">Description</string>
+    <string name="documents_field_department">Department</string>
+    <string name="documents_no_department">No department</string>
+    <string name="documents_delete_dialog_title">Delete document</string>
+    <string name="documents_delete_confirm">Are you sure you want to delete \"%1$s\"? This action cannot be undone.</string>
+    <string name="documents_sort_label">Sort</string>
+    <string name="documents_empty">No documents found</string>
+    <string name="documents_empty_search">No results for \"%1$s\"</string>
+    <string name="documents_empty_dept">No documents in \"%1$s\"</string>
+    <string name="documents_upload_first">Upload your first document</string>
+    <string name="documents_load_failed">Failed to load documents</string>
+    <string name="documents_no_dept_short">No dept.</string>
+    <string name="documents_status_pending">Pending</string>
+    <string name="documents_status_processing">Processing</string>
+    <string name="documents_status_completed">Completed</string>
+    <string name="documents_status_error">Error</string>
+
+    <!-- ── Add Document ───────────────────────────────────────────── -->
+    <string name="add_document_title">New Documents</string>
+    <string name="add_document_drop_hint">Drag or drop the file here\nor</string>
+    <string name="add_document_upload_button">Choose file</string>
+    <string name="add_document_change_button">Change file</string>
+    <string name="add_document_scan_button">Scan</string>
+    <string name="add_document_supported_files">Supported files: PDF, DOCX, TXT, JPG, PNG</string>
+    <string name="add_document_file_details">File Details</string>
+    <string name="add_document_name_label">Document Name</string>
+    <string name="add_document_name_hint">Enter a name</string>
+    <string name="add_document_description_label">Description</string>
+    <string name="add_document_description_hint">Enter a description (optional)</string>
+    <string name="add_document_category_label">Category</string>
+    <string name="add_document_category_general">General</string>
+    <string name="add_document_uploading">Uploading document…</string>
+    <string name="add_document_ai_processing">AI is processing…</string>
+    <string name="add_document_whats_happening">What\'s happening</string>
+    <string name="add_document_step1_title">Sending your file</string>
+    <string name="add_document_step1_desc">Securely transferring to our servers</string>
+    <string name="add_document_step2_title">Extracting content</string>
+    <string name="add_document_step2_desc">Reading text and structure from the document</string>
+    <string name="add_document_step3_title">Training the AI</string>
+    <string name="add_document_step3_desc">Preparing the model to answer your questions</string>
+    <string name="add_document_once_ready">Once ready, you\'ll be able to…</string>
+    <string name="add_document_feature_chat">Chat with your document</string>
+    <string name="add_document_feature_summary">Get instant summaries</string>
+    <string name="add_document_feature_search">Search specific topics</string>
+    <string name="add_document_ready">Ready to Analyze!</string>
+    <string name="add_document_failed">Upload Failed</string>
+    <string name="add_document_ai_note">AI is working its magic.</string>
+
+    <!-- ── Document Detail ───────────────────────────────────────── -->
+    <string name="doc_detail_unsaved_title">Unsaved changes</string>
+    <string name="doc_detail_unsaved_body">You have unsaved changes. Do you want to discard them?</string>
+    <string name="doc_detail_discard">Discard</string>
+    <string name="doc_detail_keep_editing">Keep editing</string>
+    <string name="doc_detail_edit_title">Edit document</string>
+    <string name="doc_detail_delete_title">Delete document</string>
+    <string name="doc_detail_delete_confirm">Are you sure you want to delete \"%1$s\"? This action cannot be undone.</string>
+    <string name="doc_detail_refresh_ai">Refresh AI status</string>
+    <string name="doc_detail_ai_summary">AI Summary</string>
+    <string name="doc_detail_ai_queued">Document is queued for AI processing.</string>
+    <string name="doc_detail_ai_processing">AI is currently analysing this document…</string>
+    <string name="doc_detail_ai_failed">AI processing failed for this document.</string>
+    <string name="doc_detail_read_more">Read more</string>
+    <string name="doc_detail_show_less">Show less</string>
+    <string name="doc_detail_no_summary">No summary available.</string>
+    <string name="doc_detail_metadata">Metadata</string>
+    <string name="doc_detail_file_type">File type</string>
+    <string name="doc_detail_file_size">File size</string>
+    <string name="doc_detail_uploaded">Uploaded</string>
+    <string name="doc_detail_uploaded_by">Uploaded by</string>
+    <string name="doc_detail_department">Department</string>
+    <string name="doc_detail_description">Description</string>
+    <string name="doc_detail_view">View Document</string>
+    <string name="doc_detail_download">Download</string>
+    <string name="doc_detail_share">Share</string>
+    <string name="doc_detail_chatbot">Chatbot</string>
+    <string name="doc_detail_questions_remaining">%1$d questions remaining</string>
+    <string name="doc_detail_chat_hint">Ask a question about this document.</string>
+    <string name="doc_detail_ai_thinking">The AI is thinking…</string>
+    <string name="doc_detail_ai_slow">This may take a few minutes.</string>
+    <string name="doc_detail_quota_exhausted">Question quota exhausted.</string>
+    <string name="doc_detail_chat_input_hint">Type your question…</string>
+    <string name="doc_detail_send">Send</string>
+
+    <!-- ── Global Chat ──────────────────────────────────────────── -->
+    <string name="global_chat_title">Global Chat</string>
+    <string name="global_chat_tab">AI Chat</string>
+    <string name="global_chat_remaining">%1$d questions left</string>
+    <string name="global_chat_input_hint">Ask about any of your documents…</string>
+    <string name="global_chat_send">Send</string>
+    <string name="global_chat_thinking">The AI is thinking…</string>
+    <string name="global_chat_sources">Sources</string>
+    <string name="global_chat_empty_title">Ask anything</string>
+    <string name="global_chat_empty_subtitle">Ask a question across all your documents and the AI will find the answer.</string>
+</resources>
